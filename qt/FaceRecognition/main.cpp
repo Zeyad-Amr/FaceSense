@@ -18,16 +18,39 @@ using namespace cv::ml;
 using namespace std;
 using namespace cv;
 
+#include <iostream>
+#include <opencv2/core.hpp>
+
+using namespace cv;
+using namespace std;
+
+void printMatrix(const Mat& matrix) {
+    cout<<matrix.size()<<'\n';
+    int numRows = matrix.rows;
+    int numCols = matrix.cols;
+    int startRow = (numRows - 15) / 2;
+    int startCol = (numCols - 15) / 2;
+
+    for (int i = startRow; i < startRow + 15; i++) {
+        for (int j = startCol; j < startCol + 15; j++) {
+            cout << matrix.at<double>(i, j) << "\t";
+        }
+        cout << endl;
+    }
+}
+
+
 double calculateAccuracy(const Mat& y_pred, const Mat& Y_test) {
     CV_Assert(y_pred.size() == Y_test.size());
 
     int correctPredictions = 0;
     for (int i = 0; i < y_pred.rows; i++) {
+        cout<<y_pred.at<double>(i)<<' '<<Y_test.at<double>(i)<<'\n';
         if (y_pred.at<double>(i) == Y_test.at<double>(i)) {
             correctPredictions++;
         }
     }
-
+    cout<<"Correct Predictions: "<<correctPredictions<<'\n';
     return static_cast<double>(correctPredictions) / y_pred.rows;
 }
 
@@ -144,6 +167,7 @@ int main(int argc, char *argv[])
 
         for (size_t i = 0; i < filenames.size(); i++) {
             Mat img = imread(filenames[i], 0); // read image
+//            cout<<img.size()<<' ';
             if (img.empty()) {
                 cout << "Could not read image " << filenames[i] << endl;
                 continue;
@@ -152,7 +176,9 @@ int main(int argc, char *argv[])
             X.push_back(flattenedImg);
             y.push_back(getClassFromName(filenames[i]));
         }
+    cout<<X.size()<<' '<<X[0].size()<<' '<<y.size();
     cout<<"Finished getting input\n";
+
     // Step 1: Load input data from file or some other source.
     vector<vector<double>> x_train; // assume this is loaded with training data
     vector<vector<double>> x_test; // assume this is loaded with testing data
@@ -160,8 +186,11 @@ int main(int argc, char *argv[])
     vector<double> y_test; // assume this is loaded with labels for testing data
 
     train_test_split(X,y,0.8,42,x_train,x_test,y_train,y_test);
+
     cout<<"Finished train test split\n";
+
     preprocess_data(x_train,x_test,x_train,x_test);
+
     cout<<"Finished preprocessing\n";
 
     // Step 2: Split dataset into training and testing
@@ -195,7 +224,6 @@ int main(int argc, char *argv[])
     // Step 4: Project Training data to PCA
     cout << "Projecting the input data on the eigenfaces orthonormal basis" << endl;
     Mat Xtrain_pca = pca.project(X_train);
-
     Xtrain_pca.convertTo(Xtrain_pca, CV_32F);
     Y_train.convertTo(Y_train, CV_32S);
 
@@ -204,22 +232,25 @@ int main(int argc, char *argv[])
 //    svm->setType(cv::ml::SVM::C_SVC);
 //    svm->setKernel(cv::ml::SVM::RBF);
 //    svm->setTermCriteria(cv::TermCriteria(cv::TermCriteria::MAX_ITER, 100, 1e-6));
-
 //    svm->trainAuto(Xtrain_pca, cv::ml::ROW_SAMPLE, Y_train);
-        Ptr<SVM> svm = SVM::create();
-        svm->setType(SVM::C_SVC);
-        svm->setKernel(SVM::RBF);
-        svm->setGamma(1e-3);
-        svm->setC(1000);
-        svm->train(Xtrain_pca, ROW_SAMPLE, Y_train);
+
+    Ptr<SVM> svm = SVM::create();
+    svm->setType(SVM::C_SVC);
+    svm->setKernel(SVM::RBF);
+    svm->setGamma(1e-3);
+    svm->setC(1000);
+    svm->train(Xtrain_pca, ROW_SAMPLE, Y_train);
 
     cout<<"Finished SVM\n";
 
     // Step 6: Perform testing and get classification report
     cout << "Predicting people's names on the test set" << endl;
     clock_t t0 = clock();
+//    printMatrix(X_test);
     Mat Xtest_pca = pca.project(X_test);
+//    printMatrix(Xtest_pca);
     Xtest_pca.convertTo(Xtest_pca, CV_32F);
+//    printMatrix(Xtest_pca);
     Mat y_pred;
     svm->predict(Xtest_pca, y_pred);
     cout << "done in " << (double)(clock() - t0) / CLOCKS_PER_SEC << "s" << endl;
