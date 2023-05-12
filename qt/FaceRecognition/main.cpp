@@ -4,6 +4,8 @@
 #include "recognition.h"
 
 
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -73,6 +75,17 @@ int main(int argc, char *argv[])
     PCA pca(train_data, cv::Mat(), PCA::DATA_AS_ROW, 150);
     cv::Mat reduced_train_data = pca.project(train_data);
     cv::Mat reduced_test_data = pca.project(test_data);
+
+    //Implemented PCA
+    // Compute PCA on train_data
+//    cv::Mat eigenvectors;
+//    int num_components = 150;
+//    eigenvectors = pca(train_data);
+
+//    // Project train_data and test_data onto the principal axes
+//    cv::Mat reduced_train_data = transformData(train_data, eigenvectors, num_components);
+//    cv::Mat reduced_test_data = transformData(test_data, eigenvectors, num_components);
+
 
 
     // Train an SVM classifier on the reduced data

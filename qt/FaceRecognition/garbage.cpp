@@ -213,3 +213,148 @@
 ////    return results;
 //}
 
+
+
+
+
+//PCA implementation
+//#include "recognition.h"
+//#include "cmath"
+
+//void computeEigen_2(std::vector<std::vector<double>>& A,
+//                  std::vector<double>& eigenvalues,
+//                  std::vector<std::vector<double>>& eigenvectors)
+//{
+//    int n = A.size();
+
+//    // Initialize eigenvectors to the identity matrix
+//    eigenvectors.resize(n, std::vector<double>(n, 0));
+//    for (int i = 0; i < n; i++) {
+//        eigenvectors[i][i] = 1;
+//    }
+
+//    // Compute the eigenvalues and eigenvectors using Jacobi algorithm
+//    double tolerance = 1e-12;
+//    double delta = 1;
+//    int max_iterations = n * n;
+//    int iteration = 0;
+
+//    while (delta > tolerance && iteration < max_iterations) {
+//        delta = 0;
+//        for (int i = 0; i < n; i++) {
+//            for (int j = i + 1; j < n; j++) {
+//                double a_ii = A[i][i];
+//                double a_jj = A[j][j];
+//                double a_ij = A[i][j];
+
+//                double c, s;
+//                if (std::abs(a_ij) > tolerance) {
+//                    double tau = (a_jj - a_ii) / (2 * a_ij);
+//                    double t = (tau > 0) ? 1.0 / (tau + std::sqrt(1 + tau*tau))
+//                                         : -1.0 / (-tau + std::sqrt(1 + tau*tau));
+//                    c = 1 / std::sqrt(1 + t*t);
+//                    s = t * c;
+//                }
+//                else {
+//                    c = 1;
+//                    s = 0;
+//                }
+
+//                // Apply Givens rotation to A and eigenvectors
+//                for (int k = 0; k < n; k++) {
+//                    double a_ik = A[i][k];
+//                    double a_jk = A[j][k];
+//                    A[i][k] = c * a_ik - s * a_jk;
+//                    A[j][k] = s * a_ik + c * a_jk;
+
+//                    double v_ik = eigenvectors[i][k];
+//                    double v_jk = eigenvectors[j][k];
+//                    eigenvectors[i][k] = c * v_ik - s * v_jk;
+//                    eigenvectors[j][k] = s * v_ik + c * v_jk;
+//                }
+
+//                delta += std::abs(a_ij);
+//            }
+//        }
+//        iteration++;
+//    }
+
+//    // Extract the eigenvalues from the diagonal of A
+//    eigenvalues.resize(n, 0);
+//    for (int i = 0; i < n; i++) {
+//        eigenvalues[i] = A[i][i];
+//    }
+//}
+
+
+//void computeEigen_1(const cv::Mat& A, cv::Mat& eigenvalues, cv::Mat& eigenvectors)
+//{
+//    CV_Assert(A.rows == A.cols && A.type() == CV_64FC1);
+
+//    int n = A.rows;
+
+//    // Initialize eigenvectors to the identity matrix
+//    eigenvectors = cv::Mat::eye(n, n, CV_64FC1);
+
+//    // Convert input matrix to a std::vector of std::vector
+//    std::vector<std::vector<double>> A_data(n, std::vector<double>(n, 0));
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < n; j++) {
+//            A_data[i][j] = A.at<double>(i, j);
+//        }
+//    }
+
+//    // Compute the eigenvalues and eigenvectors using Jacobi algorithm
+//    std::vector<double> eigenvalues_data;
+//    std::vector<std::vector<double>> eigenvectors_data;
+//    computeEigen_2(A_data, eigenvalues_data, eigenvectors_data);
+
+//    // Convert output eigenvalues to cv::Mat
+//    eigenvalues = cv::Mat(eigenvalues_data).clone();
+
+//    // Convert output eigenvectors to cv::Mat
+//    for (int i = 0; i < n; i++) {
+//        for (int j = 0; j < n; j++) {
+//            eigenvectors.at<double>(i, j) = eigenvectors_data[i][j];
+//        }
+//    }
+//}
+
+
+//cv::Mat pca(cv::Mat X, int num_components) {
+//    // Center the data by subtracting the mean of each feature
+////    cv::Mat mean;
+////    cv::reduce(X, mean, 0, cv::REDUCE_AVG);
+////    cv::Mat centered_data = X - cv::repeat(mean, X.rows, 1);
+
+//    // Compute the covariance matrix of the centered data
+//    cv::Mat X_double;
+//    X.convertTo(X_double, CV_64FC1);
+//    cv::Mat cov;
+//    cv::calcCovarMatrix(X_double, cov, cv::Mat(), cv::COVAR_NORMAL | cv::COVAR_ROWS);//I think we may need to transpose X for this function.
+
+//    // Compute the eigenvalues and eigenvectors of the covariance matrix
+//    cv::Mat eigenvalues, eigenvectors;
+//    computeEigen_1(cov, eigenvalues, eigenvectors);
+
+//    // Sort the eigenvectors in descending order based on their corresponding eigenvalues
+//    cv::sortIdx(eigenvalues, eigenvalues, cv::SORT_DESCENDING);
+//    eigenvectors = eigenvectors(cv::Range::all(), cv::Range(0, num_components));
+//    eigenvalues = eigenvalues(cv::Range(0, num_components), cv::Range::all());
+
+//    // Map each point to its new axes
+//    cv::Mat transformed_data = X * eigenvectors.t();
+
+//    // Return the sorted eigenvectors, eigenvalues, and transformed data
+//    return eigenvectors;
+//}
+
+
+//cv::Mat transformData(const cv::Mat& data, const cv::Mat& eigenvectors, int num_components) {
+
+//    // Map the centered data onto the principal axes
+//    cv::Mat transformed_data = data * eigenvectors(cv::Range::all(), cv::Range(0, num_components));
+
+//    // Return the transformed data
+//    return transformed_data;
+//}

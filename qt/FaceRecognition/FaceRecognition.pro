@@ -12,6 +12,7 @@ SOURCES += \
     garbage.cpp \
     main.cpp \
     mainwindow.cpp \
+    notWorkingPCA.cpp \
     recognition.cpp
 
 HEADERS += \
