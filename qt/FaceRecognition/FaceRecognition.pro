@@ -11,10 +11,12 @@ CONFIG += c++17
 SOURCES += \
     garbage.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    recognition.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    recognition.h
 
 FORMS += \
     mainwindow.ui
