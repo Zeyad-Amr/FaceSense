@@ -39,4 +39,6 @@ LIBS += C:\opencv\opencv\release\bin\libopencv_imgcodecs470.dll
 LIBS += C:\opencv\opencv\release\bin\libopencv_imgproc470.dll
 LIBS += C:\opencv\opencv\release\bin\libopencv_calib3d470.dll
 LIBS += C:\opencv\opencv\release\bin\libopencv_ml470.dll
+LIBS += C:\opencv\opencv\release\bin\libopencv_objdetect470.dll
+
 

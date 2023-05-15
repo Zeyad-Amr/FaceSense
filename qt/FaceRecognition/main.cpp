@@ -6,105 +6,153 @@
 
 
 
-int main(int argc, char *argv[])
+//int main(int argc, char *argv[])
+//{
+//    QApplication a(argc, argv);
+
+
+//    //recognition part:
+//    vector<vector<double>> X;
+//    vector<double> y;
+
+
+//    string path = "D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/*"; // path to directory containing images
+//    vector<string> filenames;
+//    glob(path, filenames);
+
+//    for (size_t i = 0; i < filenames.size(); i++) {
+//        Mat img = imread(filenames[i], 0); // read image
+
+//        if (img.empty()) {
+//            cout << "Could not read image " << filenames[i] << endl;
+//            continue;
+//        }
+
+//        vector<double> flattenedImg = flatten(img);
+//        X.push_back(flattenedImg);
+//        y.push_back(getClassFromName(filenames[i]));
+//    }
+
+//    cout<<"Finished getting input\n";
+
+//    //train test split.
+//    vector<vector<double>> x_train;
+//    vector<vector<double>> x_test;
+//    vector<double> y_train;
+//    vector<double> y_test;
+
+//    train_test_split(X,y,0.8,42,x_train,x_test,y_train,y_test);
+
+//    cout<<"Finished train test split\n";
+
+//    preprocess_data(x_train,x_test,x_train,x_test);
+
+//    cout<<"Finished preprocessing\n";
+
+//    // Convert the input data to OpenCV format
+//    int num_train_samples = x_train.size();
+//    int num_test_samples = x_test.size();
+//    int num_features = x_train[0].size();
+
+//    cv::Mat train_data(num_train_samples, num_features, CV_32F);
+//    cv::Mat test_data(num_test_samples, num_features, CV_32F);
+//    cv::Mat train_labels(num_train_samples, 1, CV_32S);
+//    cv::Mat test_labels(num_test_samples, 1, CV_32S);
+
+//    //filling trainig matrices
+//    for (int i = 0; i < num_train_samples; i++) {
+//        for (int j = 0; j < num_features; j++) {
+//            train_data.at<float>(i, j) = static_cast<float>(x_train[i][j]);
+//        }
+//        train_labels.at<int>(i, 0) = static_cast<int>(y_train[i]);
+//    }
+//    //filling testing matrices
+//    for (int i = 0; i < num_test_samples; i++) {
+//        for (int j = 0; j < num_features; j++) {
+//            test_data.at<float>(i, j) = static_cast<float>(x_test[i][j]);
+//        }
+//        test_labels.at<int>(i, 0) = static_cast<int>(y_test[i]);
+//    }
+
+//    // Reduce the dimensionality of the data using PCA
+//    PCA pca(train_data, cv::Mat(), PCA::DATA_AS_ROW, 150);
+//    cv::Mat reduced_train_data = pca.project(train_data);
+//    cv::Mat reduced_test_data = pca.project(test_data);
+
+//    //Implemented PCA
+//    // Compute PCA on train_data
+////    cv::Mat eigenvectors;
+////    int num_components = 150;
+////    eigenvectors = pca(train_data);
+
+////    // Project train_data and test_data onto the principal axes
+////    cv::Mat reduced_train_data = transformData(train_data, eigenvectors, num_components);
+////    cv::Mat reduced_test_data = transformData(test_data, eigenvectors, num_components);
+
+
+
+//    // Train an SVM classifier on the reduced data
+//    Ptr<SVM> svm = SVM::create();
+//    svm->setType(SVM::C_SVC);
+//    svm->setKernel(SVM::RBF);
+//    svm->setGamma(1e-4);
+//    svm->setC(100);
+//    svm->train(reduced_train_data, ROW_SAMPLE, train_labels);
+
+//    // Predict labels for the test data using the trained SVM classifier
+//    cv::Mat predictions;
+//    svm->predict(reduced_test_data, predictions);
+
+//    //printing accuracy
+//    double accuracy = calculateAccuracy(predictions, test_labels);
+//    cout <<"Accuracy: " << accuracy << endl;
+
+
+//    return 0;
+//    return a.exec();
+//}
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/objdetect.hpp>
+#include <vector>
+
+int main(int argc,char *argv[])
 {
-    QApplication a(argc, argv);
-    vector<vector<double>> X;
-    vector<double> y;
+    QApplication a(argc,argv);
 
+    // Load the cascade classifier XML file for face detection
+    cv::CascadeClassifier faceCascade;
+    faceCascade.load("C:/opencv/opencv/sources/data/haarcascades_cuda/haarcascade_frontalface_default.xml");
 
-    string path = "D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/*"; // path to directory containing images
-    vector<string> filenames;
-    glob(path, filenames);
-
-    for (size_t i = 0; i < filenames.size(); i++) {
-        Mat img = imread(filenames[i], 0); // read image
-
-        if (img.empty()) {
-            cout << "Could not read image " << filenames[i] << endl;
-            continue;
-        }
-
-        vector<double> flattenedImg = flatten(img);
-        X.push_back(flattenedImg);
-        y.push_back(getClassFromName(filenames[i]));
+    // Load the image file
+    cv::Mat image = cv::imread("D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/Michael1_42.jpg");
+    if (image.empty())
+    {
+        std::cout << "Failed to open the image file." << std::endl;
+        return -1;
     }
 
-    cout<<"Finished getting input\n";
+    // Convert the image to grayscale for face detection
+    cv::Mat grayImage;
+    cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
 
-    //train test split.
-    vector<vector<double>> x_train;
-    vector<vector<double>> x_test;
-    vector<double> y_train;
-    vector<double> y_test;
+    // Perform face detection
+    std::vector<cv::Rect> faces;
+    faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
-    train_test_split(X,y,0.8,42,x_train,x_test,y_train,y_test);
+    // Display the detected faces as separate images
+    int faceCount = 0;
+    for (const auto& faceRect : faces)
+    {
+        cv::Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
 
-    cout<<"Finished train test split\n";
+        std::string windowName = "Detected Face " + std::to_string(faceCount);
+        cv::imshow(windowName, faceImage);
+        cv::waitKey(0);
+        cv::destroyWindow(windowName);
 
-    preprocess_data(x_train,x_test,x_train,x_test);
-
-    cout<<"Finished preprocessing\n";
-
-    // Convert the input data to OpenCV format
-    int num_train_samples = x_train.size();
-    int num_test_samples = x_test.size();
-    int num_features = x_train[0].size();
-
-    cv::Mat train_data(num_train_samples, num_features, CV_32F);
-    cv::Mat test_data(num_test_samples, num_features, CV_32F);
-    cv::Mat train_labels(num_train_samples, 1, CV_32S);
-    cv::Mat test_labels(num_test_samples, 1, CV_32S);
-
-    //filling trainig matrices
-    for (int i = 0; i < num_train_samples; i++) {
-        for (int j = 0; j < num_features; j++) {
-            train_data.at<float>(i, j) = static_cast<float>(x_train[i][j]);
-        }
-        train_labels.at<int>(i, 0) = static_cast<int>(y_train[i]);
+        faceCount++;
     }
-    //filling testing matrices
-    for (int i = 0; i < num_test_samples; i++) {
-        for (int j = 0; j < num_features; j++) {
-            test_data.at<float>(i, j) = static_cast<float>(x_test[i][j]);
-        }
-        test_labels.at<int>(i, 0) = static_cast<int>(y_test[i]);
-    }
-
-    // Reduce the dimensionality of the data using PCA
-    PCA pca(train_data, cv::Mat(), PCA::DATA_AS_ROW, 150);
-    cv::Mat reduced_train_data = pca.project(train_data);
-    cv::Mat reduced_test_data = pca.project(test_data);
-
-    //Implemented PCA
-    // Compute PCA on train_data
-//    cv::Mat eigenvectors;
-//    int num_components = 150;
-//    eigenvectors = pca(train_data);
-
-//    // Project train_data and test_data onto the principal axes
-//    cv::Mat reduced_train_data = transformData(train_data, eigenvectors, num_components);
-//    cv::Mat reduced_test_data = transformData(test_data, eigenvectors, num_components);
-
-
-
-    // Train an SVM classifier on the reduced data
-    Ptr<SVM> svm = SVM::create();
-    svm->setType(SVM::C_SVC);
-    svm->setKernel(SVM::RBF);
-    svm->setGamma(1e-4);
-    svm->setC(100);
-    svm->train(reduced_train_data, ROW_SAMPLE, train_labels);
-
-    // Predict labels for the test data using the trained SVM classifier
-    cv::Mat predictions;
-    svm->predict(reduced_test_data, predictions);
-
-    //printing accuracy
-    double accuracy = calculateAccuracy(predictions, test_labels);
-    cout <<"Accuracy: " << accuracy << endl;
-
-
+    a.exec();
     return 0;
-    return a.exec();
 }
