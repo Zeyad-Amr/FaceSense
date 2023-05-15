@@ -6,12 +6,14 @@ double calculateAccuracy(const Mat& y_pred, const Mat& Y_test) {
 
     int correctPredictions = 0;
     for (int i = 0; i < y_pred.rows; i++) {
+        cout<<y_pred.at<float>(i)<<' '<<Y_test.at<int>(i)<<'\n';
 
         if (y_pred.at<float>(i) == Y_test.at<int>(i)) {
             correctPredictions++;
-        }else{
-            cout<<y_pred.at<float>(i)<<' '<<Y_test.at<int>(i)<<'\n';
         }
+//        else{
+//            cout<<y_pred.at<float>(i)<<' '<<Y_test.at<int>(i)<<'\n';
+//        }
     }
 //    cout<<"Correct Predictions: "<<correctPredictions<<'\n';
     return static_cast<double>(correctPredictions) / y_pred.rows;
@@ -68,7 +70,7 @@ vector<double> flatten(cv::Mat image){
 }
 
 
-void preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest) {
+pair<vector<double>,vector<double>> preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest) {
     int n_samples_train = faces_train.size();
     int n_features = faces_train[0].size();
 
@@ -116,4 +118,5 @@ void preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> 
     }
     preprocessedXTrain = X_train;
     preprocessedXTest = X_test;
+    return make_pair(mu,std_dev_mod);
 }

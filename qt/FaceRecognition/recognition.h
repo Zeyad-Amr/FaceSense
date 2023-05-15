@@ -25,7 +25,7 @@ void train_test_split(vector<vector<double>> x, vector<double> y, float train_ra
 vector<double> flatten(cv::Mat image);//converts the image to one row, it assumes that the image is greyscale
 
 //normalize the data through subtracting mean and dividing by standarad deviation.
-void preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest);
+pair<vector<double>,vector<double>>  preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest);
 
 
 #endif // RECOGNITION_H
