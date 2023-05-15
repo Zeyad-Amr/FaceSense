@@ -1,0 +1,12 @@
+# ninja log v5
+11	4080	7058595665342064	CMakeFiles/face_recognition.dir/main.cpp.obj	ea0ccb41998d8ea5
+4101	4541	7058595669907748	face_recognition.exe	39569565ba524de1
+2	474	7058596238746354	build.ninja	e0c4cf51d4922379
+8	6057	7058589871843926	CMakeFiles/face_recognition.dir/recognition.cpp.obj	27d7a40ffc2087ce
+6	3775	7058595662288392	CMakeFiles/face_recognition.dir/MyPCA.cpp.obj	e36446d97dd13efe
+25	5447	7058597287301889	CMakeFiles/face_recognition.dir/MyPCA.cpp.obj	b152e0af484e1e3c
+16	5782	7058597290716402	CMakeFiles/face_recognition.dir/main.cpp.obj	8e2712e057751c4c
+7	5976	7058597292671168	CMakeFiles/face_recognition.dir/recognition.cpp.obj	4dd71eacde6b9ac3
+5976	6457	7058597297444532	face_recognition.exe	39569565ba524de1
+9	3977	7058597904185637	CMakeFiles/face_recognition.dir/main.cpp.obj	8e2712e057751c4c
+3977	4449	7058597908872593	face_recognition.exe	39569565ba524de1

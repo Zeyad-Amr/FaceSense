@@ -1,0 +1,3 @@
+C:/Users/Zeyad/Documents/GitHub/FaceSense/proccessing/face_recognition/cmake-build-debug/CMakeFiles/face_recognition.dir
+C:/Users/Zeyad/Documents/GitHub/FaceSense/proccessing/face_recognition/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Zeyad/Documents/GitHub/FaceSense/proccessing/face_recognition/cmake-build-debug/CMakeFiles/rebuild_cache.dir
