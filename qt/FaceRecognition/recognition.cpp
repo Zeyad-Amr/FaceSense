@@ -6,9 +6,11 @@ double calculateAccuracy(const Mat& y_pred, const Mat& Y_test) {
 
     int correctPredictions = 0;
     for (int i = 0; i < y_pred.rows; i++) {
-//        cout<<y_pred.at<float>(i)<<' '<<Y_test.at<int>(i)<<'\n';
+
         if (y_pred.at<float>(i) == Y_test.at<int>(i)) {
             correctPredictions++;
+        }else{
+            cout<<y_pred.at<float>(i)<<' '<<Y_test.at<int>(i)<<'\n';
         }
     }
 //    cout<<"Correct Predictions: "<<correctPredictions<<'\n';

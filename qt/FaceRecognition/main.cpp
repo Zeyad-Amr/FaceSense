@@ -3,31 +3,59 @@
 
 #include "recognition.h"
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/objdetect.hpp>
+#include <vector>
 
 
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+
+    //recognition part:
     vector<vector<double>> X;
     vector<double> y;
 
+    // Load the cascade classifier XML file for face detection
+    cv::CascadeClassifier faceCascade;
+    faceCascade.load("C:/opencv/opencv/sources/data/haarcascades_cuda/haarcascade_frontalface_default.xml");
 
+
+    std::vector<cv::Rect> faces;
     string path = "D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/*"; // path to directory containing images
     vector<string> filenames;
     glob(path, filenames);
 
     for (size_t i = 0; i < filenames.size(); i++) {
-        Mat img = imread(filenames[i], 0); // read image
+        Mat grayImage = imread(filenames[i], 0); // read image
 
-        if (img.empty()) {
+        if (grayImage.empty()) {
             cout << "Could not read image " << filenames[i] << endl;
             continue;
         }
 
-        vector<double> flattenedImg = flatten(img);
-        X.push_back(flattenedImg);
-        y.push_back(getClassFromName(filenames[i]));
+        // Perform face detection
+        faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+
+        // Display the detected faces as separate images
+//        int faceCount = 0;
+        for (const auto& faceRect : faces)
+        {
+            cv::Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
+
+            vector<double> flattenedImg = flatten(grayImage);
+            X.push_back(flattenedImg);
+            y.push_back(getClassFromName(filenames[i]));
+
+//            std::string windowName = "Detected Face " + std::to_string(faceCount);
+//            cv::imshow(windowName, faceImage);
+//            cv::waitKey(0);
+//            cv::destroyWindow(windowName);
+//            faceCount++;
+        }
+
     }
 
     cout<<"Finished getting input\n";
@@ -108,3 +136,45 @@ int main(int argc, char *argv[])
     return 0;
     return a.exec();
 }
+
+
+//int main(int argc,char *argv[])
+//{
+//    QApplication a(argc,argv);
+
+//    // Load the cascade classifier XML file for face detection
+//    cv::CascadeClassifier faceCascade;
+//    faceCascade.load("C:/opencv/opencv/sources/data/haarcascades_cuda/haarcascade_frontalface_default.xml");
+
+//    // Load the image file
+//    cv::Mat image = cv::imread("D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/Michael1_42.jpg");
+//    if (image.empty())
+//    {
+//        std::cout << "Failed to open the image file." << std::endl;
+//        return -1;
+//    }
+
+//    // Convert the image to grayscale for face detection
+//    cv::Mat grayImage;
+//    cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
+
+//    // Perform face detection
+//    std::vector<cv::Rect> faces;
+//    faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+
+//    // Display the detected faces as separate images
+//    int faceCount = 0;
+//    for (const auto& faceRect : faces)
+//    {
+//        cv::Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
+
+//        std::string windowName = "Detected Face " + std::to_string(faceCount);
+//        cv::imshow(windowName, faceImage);
+//        cv::waitKey(0);
+//        cv::destroyWindow(windowName);
+
+//        faceCount++;
+//    }
+//    a.exec();
+//    return 0;
+//}
