@@ -12,6 +12,9 @@ public:
     cv::Mat reduced_train_data;
     cv::Mat reduced_test_data;
     MyPCA(cv::Mat train_data, cv::Mat test_data);
+private:
+    void apply_pca(cv::Mat train_data, cv::Mat test_data);
+
 };
 
 

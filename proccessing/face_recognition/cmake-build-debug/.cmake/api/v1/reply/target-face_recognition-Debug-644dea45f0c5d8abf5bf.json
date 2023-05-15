@@ -29,19 +29,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 12,
+				"line" : 16,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 14,
+				"line" : 18,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 10,
+				"line" : 12,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 11,
 				"parent" : 0
 			}
 		]
@@ -62,6 +68,10 @@
 			[
 				{
 					"backtrace" : 3,
+					"path" : "C:/eigen/bench/btl/libs"
+				},
+				{
+					"backtrace" : 4,
 					"isSystem" : true,
 					"path" : "C:/opencv/minwg-build/install/include"
 				}
