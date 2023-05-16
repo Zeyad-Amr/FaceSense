@@ -12,7 +12,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 include_directories(${EIGEN_DIR})
 
-add_executable(face_recognition main.cpp recognition.cpp recognition.h MyPCA.cpp MyPCA.h)
+add_executable(face_recognition main.cpp recognition.cpp recognition.h MyPCA.cpp MyPCA.h test_pca.h)
 
 target_link_libraries(face_recognition ${OpenCV_LIBS} )
 

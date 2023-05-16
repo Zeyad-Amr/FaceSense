@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
         Mat grayImage = imread(filenames[i], 0); // read image
         // Resize the image
-        Size targetSize(100, 100);
+        Size targetSize(30, 30);
         resize(grayImage, grayImage, targetSize);
 
         if (grayImage.empty())
@@ -97,9 +97,11 @@ int main(int argc, char *argv[])
     //
     //    reduced_train_data = pca.project(train_data);
     //    reduced_test_data = pca.project(test_data);
-    MyPCA pca = MyPCA();
-    Mat reduced_train_data = pca.apply(train_data);
-    Mat reduced_test_data = pca.apply(test_data);
+
+    MyPCA pca (train_data, 150);
+
+    Mat reduced_train_data = pca.reduceData(train_data);
+    Mat reduced_test_data = pca.reduceData(test_data);
 
     // Train an SVM classifier on the reduced data
     Ptr<SVM> svm = SVM::create();
