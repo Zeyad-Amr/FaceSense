@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
     vector<double> y_train;
     vector<double> y_test;
 
-    train_test_split(X, y, 0.8, 40, x_train, x_test, y_train, y_test);
+    train_test_split(X, y, 0.8, 11, x_train, x_test, y_train, y_test);
 
     cout << "Finished train test split\n";
 
