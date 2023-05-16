@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cmath>
 #include <Eigen/Dense>
@@ -29,4 +30,6 @@ private:
     MatrixXd selectTopEigenVectors(const MatrixXd &eigenVectors, int maxComponents);
     Eigen::MatrixXd cvMatToEigen(const cv::Mat &cvMat);
     Mat eigenToCvMat(const MatrixXd &eigenMat);
+    void storeSelectedEigenVectors(const MatrixXd &selectedEigenVectors, const string &filename);
+    void loadSelectedEigenVectors(const string &filename, MatrixXd &selectedEigenVectors);
 };

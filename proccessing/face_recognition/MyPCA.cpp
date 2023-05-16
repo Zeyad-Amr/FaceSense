@@ -7,9 +7,27 @@ MyPCA::MyPCA(const Mat data, int maxComponents)
     numFeatures = eigen_data.cols();
     mean = calculateMean(eigen_data);
     normalizedData = normalizeData(eigen_data, mean);
-    covariance = calculateCovariance(normalizedData);
-    eigenSolver = calculateEigenSolver(covariance);
-    selectedEigenVectors = selectTopEigenVectors(eigenSolver.eigenvectors(), maxComponents);
+
+    string resultsFile = "pca_results.txt";
+
+    ifstream file(resultsFile);
+    if (file.peek() == ifstream::traits_type::eof())
+    {
+        cout << "File is empty, storing ..." << endl;
+        // File is empty, calculate and store the selectedEigenVectors
+        covariance = calculateCovariance(normalizedData);
+        eigenSolver = calculateEigenSolver(covariance);
+        selectedEigenVectors = selectTopEigenVectors(eigenSolver.eigenvectors(), maxComponents);
+
+        storeSelectedEigenVectors(selectedEigenVectors, resultsFile);
+    }
+    else
+    {
+        cout << "File is not empty, loading ..." << endl;
+        // File is not empty, load the selectedEigenVectors from the file
+
+        loadSelectedEigenVectors(resultsFile, selectedEigenVectors);
+    }
 }
 
 Mat MyPCA::reduceData(const Mat data)
@@ -82,4 +100,65 @@ Mat MyPCA::eigenToCvMat(const Eigen::MatrixXd &eigenMat)
 
     cout << "end convert to mat" << endl;
     return cvMat32F;
+}
+
+void MyPCA::storeSelectedEigenVectors(const MatrixXd &selectedEigenVectors, const string &filename)
+{
+    ofstream file(filename);
+    if (file.is_open())
+    {
+        for (int i = 0; i < selectedEigenVectors.rows(); i++)
+        {
+            for (int j = 0; j < selectedEigenVectors.cols(); j++)
+            {
+                file << selectedEigenVectors(i, j) << " ";
+            }
+            file << "\n";
+        }
+        file.close();
+        cout << "Selected EigenVectors stored in " << filename << endl;
+    }
+    else
+    {
+        cout << "Unable to open file " << filename << " for storing the selected EigenVectors." << endl;
+    }
+}
+
+void MyPCA::loadSelectedEigenVectors(const string &filename, MatrixXd &selectedEigenVectors)
+{
+    ifstream file(filename);
+    if (file.is_open())
+    {
+        vector<vector<double>> data;
+        string line;
+        while (getline(file, line))
+        {
+            vector<double> row;
+            istringstream iss(line);
+            double value;
+            while (iss >> value)
+            {
+                row.push_back(value);
+            }
+            data.push_back(row);
+        }
+        file.close();
+
+        int rows = data.size();
+        int cols = (rows > 0) ? data[0].size() : 0;
+        selectedEigenVectors.resize(rows, cols);
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                selectedEigenVectors(i, j) = data[i][j];
+            }
+        }
+
+        cout << "Selected EigenVectors loaded from " << filename << endl;
+    }
+    else
+    {
+        cout << "Unable to open file " << filename << endl;
+    }
 }
