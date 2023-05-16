@@ -1,9 +1,4 @@
 "C:\Program Files\JetBrains\CLion 2023.1.2\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2023.1.2/bin/ninja/win/x64/ninja.exe" -G Ninja -S C:\Users\Zeyad\Documents\GitHub\FaceSense\proccessing\face_recognition -B C:\Users\Zeyad\Documents\GitHub\FaceSense\proccessing\face_recognition\cmake-build-debug
 -- Configuring done
-CMake Warning at CMakeLists.txt:18 (target_link_libraries):
-  Target "face_recognition" requests linking to directory "C:/eigen/build".
-  Targets may link only to libraries.  CMake is dropping the item.
-
-
 -- Generating done
 -- Build files have been written to: C:/Users/Zeyad/Documents/GitHub/FaceSense/proccessing/face_recognition/cmake-build-debug

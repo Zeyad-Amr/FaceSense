@@ -7,6 +7,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
+#include <opencv2/objdetect.hpp>
 #include <vector>
 #include <math.h>
 #include <algorithm>
@@ -30,7 +31,7 @@ public:
     static vector<double> flatten(cv::Mat image);//converts the image to one row, it assumes that the image is greyscale
 
     //normalize the data through subtracting mean and dividing by standarad deviation.
-    static void preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest);
+    static pair<vector<double>,vector<double>>  preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest);
 
 
 };

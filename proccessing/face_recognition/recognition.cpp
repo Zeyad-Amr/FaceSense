@@ -66,7 +66,7 @@ vector<double> recognition::flatten(cv::Mat image){
 }
 
 
-void recognition::preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest) {
+pair<vector<double>,vector<double>> recognition::preprocess_data(vector<vector<double>> faces_train, vector<vector<double>> faces_test,vector<vector<double>> &preprocessedXTrain, vector<vector<double>> &preprocessedXTest) {
     int n_samples_train = faces_train.size();
     int n_features = faces_train[0].size();
 
@@ -114,4 +114,5 @@ void recognition::preprocess_data(vector<vector<double>> faces_train, vector<vec
     }
     preprocessedXTrain = X_train;
     preprocessedXTest = X_test;
+    return make_pair(mu,std_dev_mod);
 }

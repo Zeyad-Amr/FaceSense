@@ -1,41 +1,37 @@
 #include "mainwindow.h"
 #include <QApplication>
-
 #include "recognition.h"
-
 #include <opencv2/opencv.hpp>
 #include <opencv2/objdetect.hpp>
 #include <vector>
-
-
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-
-    //recognition part:
-    vector<vector<double>> X;// the whole data set
-    vector<double> y;//the whole labels
+    // recognition part:
+    vector<vector<double>> X; // the whole data set
+    vector<double> y;         // the whole labels
 
     // Load the cascade classifier XML file for face detection
     cv::CascadeClassifier faceCascade;
     faceCascade.load("C:/opencv/opencv/sources/data/haarcascades_cuda/haarcascade_frontalface_default.xml");
-
 
     std::vector<cv::Rect> faces;
     string path = "D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/*"; // path to directory containing images
     vector<string> filenames;
     glob(path, filenames);
 
-    for (size_t i = 0; i < filenames.size(); i++) {
+    for (size_t i = 0; i < filenames.size(); i++)
+    {
 
         Mat grayImage = imread(filenames[i], 0); // read image
-        //Resize the image
+        // Resize the image
         Size targetSize(256, 256);
         resize(grayImage, grayImage, targetSize);
 
-        if (grayImage.empty()) {
+        if (grayImage.empty())
+        {
             cout << "Could not read image " << filenames[i] << endl;
             continue;
         }
@@ -44,8 +40,8 @@ int main(int argc, char *argv[])
         faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
         // Display the detected faces as separate images
-//        int faceCount = 0;
-        for (const auto& faceRect : faces)
+        //        int faceCount = 0;
+        for (const auto &faceRect : faces)
         {
             cv::Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
 
@@ -53,30 +49,29 @@ int main(int argc, char *argv[])
             X.push_back(flattenedImg);
             y.push_back(getClassFromName(filenames[i]));
 
-//            std::string windowName = "Detected Face " + std::to_string(faceCount);
-//            cv::imshow(windowName, faceImage);
-//            cv::waitKey(0);
-//            cv::destroyWindow(windowName);
-//            faceCount++;
+            //            std::string windowName = "Detected Face " + std::to_string(faceCount);
+            //            cv::imshow(windowName, faceImage);
+            //            cv::waitKey(0);
+            //            cv::destroyWindow(windowName);
+            //            faceCount++;
         }
-
     }
 
-    cout<<"Finished getting input\n";
+    cout << "Finished getting input\n";
 
-    //train test split.
+    // train test split.
     vector<vector<double>> x_train;
     vector<vector<double>> x_test;
     vector<double> y_train;
     vector<double> y_test;
 
-    train_test_split(X,y,0.8,40,x_train,x_test,y_train,y_test);
+    train_test_split(X, y, 0.8, 40, x_train, x_test, y_train, y_test);
 
-    cout<<"Finished train test split\n";
+    cout << "Finished train test split\n";
 
-    pair<vector<double>,vector<double>> mu_std = preprocess_data(x_train,x_test,x_train,x_test);
+    pair<vector<double>, vector<double>> mu_std = preprocess_data(x_train, x_test, x_train, x_test);
 
-    cout<<"Finished preprocessing\n";
+    cout << "Finished preprocessing\n";
 
     // Convert the input data to OpenCV format
     int num_train_samples = x_train.size();
@@ -88,16 +83,20 @@ int main(int argc, char *argv[])
     cv::Mat train_labels(num_train_samples, 1, CV_32S);
     cv::Mat test_labels(num_test_samples, 1, CV_32S);
 
-    //filling trainig matrices
-    for (int i = 0; i < num_train_samples; i++) {
-        for (int j = 0; j < num_features; j++) {
+    // filling trainig matrices
+    for (int i = 0; i < num_train_samples; i++)
+    {
+        for (int j = 0; j < num_features; j++)
+        {
             train_data.at<float>(i, j) = static_cast<float>(x_train[i][j]);
         }
         train_labels.at<int>(i, 0) = static_cast<int>(y_train[i]);
     }
-    //filling testing matrices
-    for (int i = 0; i < num_test_samples; i++) {
-        for (int j = 0; j < num_features; j++) {
+    // filling testing matrices
+    for (int i = 0; i < num_test_samples; i++)
+    {
+        for (int j = 0; j < num_features; j++)
+        {
             test_data.at<float>(i, j) = static_cast<float>(x_test[i][j]);
         }
         test_labels.at<int>(i, 0) = static_cast<int>(y_test[i]);
@@ -108,17 +107,15 @@ int main(int argc, char *argv[])
     cv::Mat reduced_train_data = pca.project(train_data);
     cv::Mat reduced_test_data = pca.project(test_data);
 
-    //Implemented PCA
-    // Compute PCA on train_data
-//    cv::Mat eigenvectors;
-//    int num_components = 150;
-//    eigenvectors = pca(train_data);
+    // Implemented PCA
+    //  Compute PCA on train_data
+    //    cv::Mat eigenvectors;
+    //    int num_components = 150;
+    //    eigenvectors = pca(train_data);
 
-//    // Project train_data and test_data onto the principal axes
-//    cv::Mat reduced_train_data = transformData(train_data, eigenvectors, num_components);
-//    cv::Mat reduced_test_data = transformData(test_data, eigenvectors, num_components);
-
-
+    //    // Project train_data and test_data onto the principal axes
+    //    cv::Mat reduced_train_data = transformData(train_data, eigenvectors, num_components);
+    //    cv::Mat reduced_test_data = transformData(test_data, eigenvectors, num_components);
 
     // Train an SVM classifier on the reduced data
     Ptr<SVM> svm = SVM::create();
@@ -132,36 +129,37 @@ int main(int argc, char *argv[])
     cv::Mat predictions;
     svm->predict(reduced_test_data, predictions);
 
-    //printing accuracy
+    // printing accuracy
     double accuracy = calculateAccuracy(predictions, test_labels);
-    cout <<"Accuracy: " << accuracy << endl;
+    cout << "Accuracy: " << accuracy << endl;
 
-    //Predicting for incoming image
+    // Predicting for incoming image
     Mat grayImage = imread("D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/test_42.jpg", 0); // read image
 
-    if (grayImage.empty()) {
+    if (grayImage.empty())
+    {
         cout << "Could not read image" << endl;
     }
 
-    //Resize the image
+    // Resize the image
     Size targetSize(256, 256);
     resize(grayImage, grayImage, targetSize);
 
-//    std::string windowName = "Detected Face " + std::to_string(1);
-//    cv::imshow(windowName, grayImage);
-//    cv::waitKey(0);
-//    cv::destroyWindow(windowName);
+    //    std::string windowName = "Detected Face " + std::to_string(1);
+    //    cv::imshow(windowName, grayImage);
+    //    cv::waitKey(0);
+    //    cv::destroyWindow(windowName);
 
     // Perform face detection
     faces.clear();
-    vector<vector<double>> incoming_data_vec;// the whole incoming data
+    vector<vector<double>> incoming_data_vec; // the whole incoming data
     faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
 
     // Display the detected faces as separate images
-//        int faceCount = 0;
+    //        int faceCount = 0;
 
     bool thereIsFace = false;
-    for (const auto& faceRect : faces)
+    for (const auto &faceRect : faces)
     {
         thereIsFace = true;
         cv::Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
@@ -169,16 +167,17 @@ int main(int argc, char *argv[])
         vector<double> flattenedImg = flatten(grayImage);
         incoming_data_vec.push_back(flattenedImg);
 
-//            std::string windowName = "Detected Face " + std::to_string(faceCount);
-//            cv::imshow(windowName, faceImage);
-//            cv::waitKey(0);
-//            cv::destroyWindow(windowName);
-//            faceCount++;
+        //            std::string windowName = "Detected Face " + std::to_string(faceCount);
+        //            cv::imshow(windowName, faceImage);
+        //            cv::waitKey(0);
+        //            cv::destroyWindow(windowName);
+        //            faceCount++;
     }
-//     preprocess_data(incoming_data_vec,x_test,incoming_data_vec,x_test);
+    //     preprocess_data(incoming_data_vec,x_test,incoming_data_vec,x_test);
 
-    if(!thereIsFace) {
-        cout<<"No faces in the incoming Photo\n";
+    if (!thereIsFace)
+    {
+        cout << "No faces in the incoming Photo\n";
         return 0;
     }
 
@@ -188,9 +187,11 @@ int main(int argc, char *argv[])
 
     cv::Mat incomingData(numOfFaces, num_features, CV_32F);
 
-    //filling trainig matrices
-    for (int i = 0; i < numOfFaces; i++) {
-        for (int j = 0; j < num_features; j++) {
+    // filling trainig matrices
+    for (int i = 0; i < numOfFaces; i++)
+    {
+        for (int j = 0; j < num_features; j++)
+        {
             incoming_data_vec[i][j] = (incoming_data_vec[i][j] - (mu_std.first)[j]) / ((mu_std.second)[j]);
             incomingData.at<float>(i, j) = static_cast<float>(incoming_data_vec[i][j]);
         }
@@ -201,17 +202,17 @@ int main(int argc, char *argv[])
     // Predict labels for the test data using the trained SVM classifier
     cv::Mat predictions_for_incoming;
     svm->predict(reduced_incoming_data, predictions_for_incoming);
-    for (int i = 0; i < predictions_for_incoming.rows; ++i) {
-        cout<<"prediction for incoming: " <<predictions_for_incoming.at<float>(i)<<endl;
+    for (int i = 0; i < predictions_for_incoming.rows; ++i)
+    {
+        cout << "prediction for incoming: " << predictions_for_incoming.at<float>(i) << endl;
     }
     return 0;
     return a.exec();
 }
 
-
-//int main(int argc,char *argv[])
+// int main(int argc,char *argv[])
 //{
-//    QApplication a(argc,argv);
+//     QApplication a(argc,argv);
 
 //    // Load the cascade classifier XML file for face detection
 //    cv::CascadeClassifier faceCascade;

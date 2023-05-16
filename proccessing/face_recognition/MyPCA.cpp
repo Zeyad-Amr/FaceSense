@@ -12,6 +12,7 @@
 using namespace Eigen;
 using namespace std;
 
+
 // Function to calculate the mean of each column (feature) in the input matrix
 VectorXd calculateMean(const MatrixXd& input) {
     VectorXd mean(input.cols());
@@ -22,55 +23,120 @@ VectorXd calculateMean(const MatrixXd& input) {
 }
 
 // Function to normalize the input matrix by subtracting the mean
-void normalize(MatrixXd& input, const VectorXd& mean) {
-    for (int i = 0; i < input.rows(); i++) {
-        input.row(i) -= mean.transpose();
+MatrixXd normalize(MatrixXd input, const VectorXd& mean) {
+    MatrixXd normalized_data=input;
+    cout<<"Data Size: "<<normalized_data.rows()<<" x "<<normalized_data.cols()<<endl;
+
+    for (int i = 0; i < normalized_data.rows(); i++) {
+        normalized_data.row(i) -= mean.transpose();
     }
+    return  normalized_data;
 }
 
+MatrixXd performPCA(const MatrixXd data, int numComponents) {
+    // Calculate the mean of each column (feature) in the input data
+    VectorXd mean = data.colwise().mean();
 
-// Function to perform PCA on the input matrix
-void performPCA(const MatrixXd& train_data, const MatrixXd& test_data, int numComponents,
-                MatrixXd& reduced_train_data, MatrixXd& reduced_test_data) {
-    // Combine the train_data and test_data into a single matrix
-    MatrixXd combinedData(train_data.rows() + test_data.rows(), train_data.cols());
-    combinedData << train_data, test_data;
+    // Normalize the data by subtracting the mean
+    MatrixXd normalizedData = data.rowwise() - mean.transpose();
 
-    // Calculate the mean and normalize the combined data
-    VectorXd mean = calculateMean(combinedData);
-    normalize(combinedData, mean);
+    // Compute the covariance matrix
+    MatrixXd covariance = (normalizedData.transpose() * normalizedData) / (normalizedData.rows() - 1);
 
-    // Perform eigendecomposition of the covariance matrix of the combined data
-    MatrixXd cov = (combinedData.transpose() * combinedData) / (combinedData.rows() - 1);
-    SelfAdjointEigenSolver<MatrixXd> eigenSolver(cov);
-    MatrixXd eigenVectors = eigenSolver.eigenvectors();
+    // Perform eigenvalue decomposition on the covariance matrix
+    SelfAdjointEigenSolver<MatrixXd> eigenSolver(covariance);
 
-    // Sort the eigenvectors in descending order of eigenvalues
-    VectorXd eigenValues = eigenSolver.eigenvalues();
-    std::vector<std::pair<double, int>> eigenPairs;
-    for (int i = 0; i < eigenValues.size(); i++) {
-        eigenPairs.push_back(make_pair(eigenValues(i), i));
-    }
-    sort(eigenPairs.rbegin(), eigenPairs.rend());
+    // Sort eigenvalues and eigenvectors in descending order
+    MatrixXd eigenVectors = eigenSolver.eigenvectors().rowwise().reverse();
+    VectorXd eigenValues = eigenSolver.eigenvalues().reverse();
 
     // Select the top 'numComponents' eigenvectors
-    MatrixXd selectedEigenVectors(combinedData.cols(), numComponents);
-    for (int i = 0; i < numComponents; i++) {
-        selectedEigenVectors.col(i) = eigenVectors.col(eigenPairs[i].second);
-    }
+    MatrixXd selectedEigenVectors = eigenVectors.leftCols(numComponents);
 
-    // Project the train_data and test_data onto the selected eigenvectors
-    reduced_train_data = train_data * selectedEigenVectors;
-    reduced_test_data = test_data * selectedEigenVectors;
-}
-MyPCA::MyPCA(cv::Mat train_data, cv::Mat test_data){
-    // Reduce the dimensionality of the data using PCA
-    PCA pca(train_data, cv::Mat(), PCA::DATA_AS_ROW, 150);
-    reduced_train_data = pca.project(train_data);
-    reduced_test_data = pca.project(test_data);
+    cout<<"Data=> "<<normalizedData.rows()<<" x "<<normalizedData.cols()<<endl;
+    cout<<"selectedEigenVectors=> "<<selectedEigenVectors.rows()<<" x "<<selectedEigenVectors.cols()<<endl;
 
+    // Project the normalized data onto the selected eigenvectors to obtain the reduced data
+    MatrixXd reducedData = normalizedData * selectedEigenVectors;
+
+    cout<<"reducedData=> "<<reducedData.rows()<<" x "<<reducedData.cols()<<endl;
+
+    return reducedData;
 }
 
-void MyPCA::apply_pca(cv::Mat train_data, cv::Mat test_data){
+MatrixXd performPCA2(const MatrixXd data, int numComponents) {
+    // Calculate the mean and normalize the data
+    VectorXd mean = calculateMean(data);
+    MatrixXd normalized_data = data;
+    normalize(normalized_data, mean);
 
+    // Perform Singular Value Decomposition (SVD) on the normalized data
+    JacobiSVD<MatrixXd> svd(normalized_data, ComputeThinU | ComputeThinV);
+
+    // Retrieve the singular vectors (eigenvectors) from the SVD
+    MatrixXd singularVectors = svd.matrixU();
+
+    // Select the top 'numComponents' singular vectors
+    MatrixXd selectedSingularVectors = singularVectors.leftCols(numComponents);
+
+    cout<<"Data=> "<<normalized_data.rows()<<" x "<<normalized_data.cols()<<endl;
+    cout<<"selectedSingularVectors=> "<<selectedSingularVectors.rows()<<" x "<<selectedSingularVectors.cols()<<endl;
+
+    // Project the data onto the selected singular vectors
+    MatrixXd reducedData = normalized_data * selectedSingularVectors;
+
+    cout<<"reducedData=> "<<reducedData.rows()<<" x "<<reducedData.cols()<<endl;
+
+    return reducedData;
+}
+
+
+Eigen::MatrixXd cvMatToEigen(const cv::Mat& cvMat) {
+    cout<<"start convert to eigen"<<endl;
+    cv::Mat cvMatDouble;
+    cvMat.convertTo(cvMatDouble, CV_64FC1);
+
+    Eigen::MatrixXd eigenMat(cvMatDouble.rows, cvMatDouble.cols);
+    Eigen::Map<Eigen::MatrixXd>(eigenMat.data(), eigenMat.rows(), eigenMat.cols()) = Eigen::Map<const Eigen::MatrixXd>(cvMatDouble.ptr<double>(), cvMatDouble.rows, cvMatDouble.cols);
+
+    cout<<"end convert to eigen"<<endl;
+    return eigenMat;
+}
+
+cv::Mat eigenToCvMat(const Eigen::MatrixXd& eigenMat) {
+    cout<<"start convert to mat"<<endl;
+
+    cv::Mat cvMat(eigenMat.rows(), eigenMat.cols(), CV_64FC1);
+    Eigen::Map<Eigen::MatrixXd>(cvMat.ptr<double>(), cvMat.rows, cvMat.cols) = eigenMat;
+
+    // Convert training and test data to CV_32F
+    cv::Mat cvMat32F;
+    cvMat.convertTo(cvMat32F, CV_32F);
+
+    cout<<"end convert to mat"<<endl;
+    return cvMat32F;
+}
+
+
+MyPCA::MyPCA(){
+
+
+}
+
+Mat MyPCA::apply(Mat data){
+    cout<<"Train to eigen"<<endl;
+    MatrixXd train_data_eigen = cvMatToEigen(data);
+
+    cout<<"Start Perform"<<endl;
+    MatrixXd reduced_data_eigen ;
+
+    cout<<"Data Dimension: "<<data.rows<<" x "<<data.cols<<endl;
+
+    reduced_data_eigen= performPCA2(train_data_eigen,150);
+    Mat reducedMat =eigenToCvMat(reduced_data_eigen);
+
+
+    cout<<"Reduced Data Dimension: "<<reducedMat.rows<<" x "<<reducedMat.cols<<endl;
+
+    return reducedMat;
 }

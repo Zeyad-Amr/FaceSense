@@ -4,16 +4,15 @@ project(face_recognition)
 set(CMAKE_CXX_STANDARD 17)
 
 set(OpenCV_DIR "C:/opencv/minwg-build/install/x64/mingw/lib")
-set(EIGEN_DIR "C:/eigen/bench/btl/libs")
+set(EIGEN_DIR "C:/eigen")
 
 find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
-include_directories(${EIGEN_DIR})
 
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+include_directories(${EIGEN_DIR})
 
 add_executable(face_recognition main.cpp recognition.cpp recognition.h MyPCA.cpp MyPCA.h)
 
-target_link_libraries(face_recognition ${OpenCV_LIBS} ${EIGEN_DIR})
+target_link_libraries(face_recognition ${OpenCV_LIBS} )
 
