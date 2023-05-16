@@ -7,7 +7,8 @@ using namespace Eigen;
 using namespace std;
 using namespace cv;
 
-class MyPCA {
+class MyPCA
+{
 public:
     MyPCA(const Mat data, int maxComponents);
     Mat reduceData(const Mat data);
@@ -21,11 +22,11 @@ private:
     SelfAdjointEigenSolver<MatrixXd> eigenSolver;
     MatrixXd selectedEigenVectors;
 
-    VectorXd calculateMean(const MatrixXd& data);
-    MatrixXd normalizeData(const MatrixXd& data, const VectorXd& mean) ;
-    MatrixXd calculateCovariance(const MatrixXd& normalizedData);
-    SelfAdjointEigenSolver<MatrixXd> calculateEigenSolver(const MatrixXd& covariance);
-    MatrixXd selectTopEigenVectors(const MatrixXd& eigenVectors, int maxComponents);
-    Eigen::MatrixXd cvMatToEigen(const cv::Mat& cvMat);
-    Mat eigenToCvMat(const MatrixXd& eigenMat);
+    VectorXd calculateMean(const MatrixXd &data);
+    MatrixXd normalizeData(const MatrixXd &data, const VectorXd &mean);
+    MatrixXd calculateCovariance(const MatrixXd &normalizedData);
+    SelfAdjointEigenSolver<MatrixXd> calculateEigenSolver(const MatrixXd &covariance);
+    MatrixXd selectTopEigenVectors(const MatrixXd &eigenVectors, int maxComponents);
+    Eigen::MatrixXd cvMatToEigen(const cv::Mat &cvMat);
+    Mat eigenToCvMat(const MatrixXd &eigenMat);
 };
