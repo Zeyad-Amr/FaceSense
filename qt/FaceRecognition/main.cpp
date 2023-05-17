@@ -424,11 +424,11 @@ int main(int argc, char *argv[])
     Mat reduced_incoming_data = pca.project(incomingData);
 
     // Predict labels for the test data using the trained SVM classifier
-    Mat predictions_for_incoming;
 //    svm->predict(reduced_incoming_data, predictions_for_incoming);
+    Mat predictions_for_incoming = predict_multi_class(reduced_incoming_data,models);
     for (int i = 0; i < predictions_for_incoming.rows; ++i)
     {
-        cout << "prediction for incoming: " << predictions_for_incoming.at<float>(i) << endl;
+        cout << "prediction for incoming: " << predictions_for_incoming.at<int>(i) << endl;
     }
     return 0;
 }
