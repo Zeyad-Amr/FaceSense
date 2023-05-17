@@ -1,6 +1,6 @@
 #include "MyPCA.h"
 
-MyPCA::MyPCA(const Mat data, int maxComponents)
+MyPCA::MyPCA(const Mat& data, int maxComponents)
 {
     MatrixXd eigen_data = cvMatToEigen(data);
     numSamples = eigen_data.rows();
@@ -30,7 +30,7 @@ MyPCA::MyPCA(const Mat data, int maxComponents)
     }
 }
 
-Mat MyPCA::reduceData(const Mat data)
+Mat MyPCA::reduceData(const Mat& data)
 {
 
     MatrixXd eigen_data = cvMatToEigen(data);
@@ -59,14 +59,14 @@ MatrixXd MyPCA::normalizeData(const MatrixXd &data, const VectorXd &mean)
     return data.rowwise() - mean.transpose();
 }
 
-MatrixXd MyPCA::calculateCovariance(const MatrixXd &normalizedData)
+MatrixXd MyPCA::calculateCovariance(const MatrixXd &data) const
 {
-    return (normalizedData.transpose() * normalizedData) / (numSamples - 1);
+    return (data.transpose() * data) / (numSamples - 1);
 }
 
-SelfAdjointEigenSolver<MatrixXd> MyPCA::calculateEigenSolver(const MatrixXd &covariance)
+SelfAdjointEigenSolver<MatrixXd> MyPCA::calculateEigenSolver(const MatrixXd &covar)
 {
-    return SelfAdjointEigenSolver<MatrixXd>(covariance);
+    return SelfAdjointEigenSolver<MatrixXd>(covar);
 }
 
 MatrixXd MyPCA::selectTopEigenVectors(const MatrixXd &eigenVectors, int maxComponents)
@@ -102,16 +102,16 @@ Mat MyPCA::eigenToCvMat(const Eigen::MatrixXd &eigenMat)
     return cvMat32F;
 }
 
-void MyPCA::storeSelectedEigenVectors(const MatrixXd &selectedEigenVectors, const string &filename)
+void MyPCA::storeSelectedEigenVectors(const MatrixXd &eigenVectors, const string &filename)
 {
     ofstream file(filename);
     if (file.is_open())
     {
-        for (int i = 0; i < selectedEigenVectors.rows(); i++)
+        for (int i = 0; i < eigenVectors.rows(); i++)
         {
-            for (int j = 0; j < selectedEigenVectors.cols(); j++)
+            for (int j = 0; j < eigenVectors.cols(); j++)
             {
-                file << selectedEigenVectors(i, j) << " ";
+                file << eigenVectors(i, j) << " ";
             }
             file << "\n";
         }
@@ -124,7 +124,7 @@ void MyPCA::storeSelectedEigenVectors(const MatrixXd &selectedEigenVectors, cons
     }
 }
 
-void MyPCA::loadSelectedEigenVectors(const string &filename, MatrixXd &selectedEigenVectors)
+void MyPCA::loadSelectedEigenVectors(const string &filename, MatrixXd &eigenVectors)
 {
     ifstream file(filename);
     if (file.is_open())
@@ -146,12 +146,12 @@ void MyPCA::loadSelectedEigenVectors(const string &filename, MatrixXd &selectedE
 
         int rows = data.size();
         int cols = (rows > 0) ? data[0].size() : 0;
-        selectedEigenVectors.resize(rows, cols);
+        eigenVectors.resize(rows, cols);
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < cols; j++)
             {
-                selectedEigenVectors(i, j) = data[i][j];
+                eigenVectors(i, j) = data[i][j];
             }
         }
 
