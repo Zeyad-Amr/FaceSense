@@ -10,13 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     garbage.cpp \
+    logistic.cpp \
     main.cpp \
     mainwindow.cpp \
+    mypca.cpp \
     notWorkingPCA.cpp \
     recognition.cpp
 
 HEADERS += \
+    logistic.h \
     mainwindow.h \
+    mypca.h \
     recognition.h
 
 FORMS += \
@@ -31,6 +35,8 @@ win32:CONFIG(release, debug|release): LIBS += -LC:/opencv/opencv/build/x64/vc16/
 else:win32:CONFIG(debug, debug|release): LIBS += -LC:/opencv/opencv/build/x64/vc16/lib/ -lopencv_world470d
 else:unix: LIBS += -LC:/opencv/opencv/build/x64/vc16/lib/ -lopencv_world470
 
+INCLUDEPATH += C:/Eigen
+
 INCLUDEPATH += C:/opencv/opencv/build/include
 DEPENDPATH += C:/opencv/opencv/build/include
 LIBS += C:\opencv\opencv\release\bin\libopencv_core470.dll
@@ -40,5 +46,4 @@ LIBS += C:\opencv\opencv\release\bin\libopencv_imgproc470.dll
 LIBS += C:\opencv\opencv\release\bin\libopencv_calib3d470.dll
 LIBS += C:\opencv\opencv\release\bin\libopencv_ml470.dll
 LIBS += C:\opencv\opencv\release\bin\libopencv_objdetect470.dll
-
 

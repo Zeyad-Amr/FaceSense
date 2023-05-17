@@ -16,7 +16,7 @@ CXX           = g++
 DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -DMINGW_HAS_SECURE_API=1 -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -fno-keep-inline-dllexport -O2 -Wall -Wextra -Wextra $(DEFINES)
 CXXFLAGS      = -fno-keep-inline-dllexport -O2 -std=gnu++1z -Wall -Wextra -Wextra -fexceptions -mthreads $(DEFINES)
-INCPATH       = -I../FaceRecognition -I. -IC:/opencv/opencv/build/include -IC:/Qt/6.4.3/mingw_64/include -IC:/Qt/6.4.3/mingw_64/include/QtWidgets -IC:/Qt/6.4.3/mingw_64/include/QtGui -IC:/Qt/6.4.3/mingw_64/include/QtCore -Irelease -I. -I/include -IC:/Qt/6.4.3/mingw_64/mkspecs/win32-g++ 
+INCPATH       = -I../FaceRecognition -I. -IC:/Eigen -IC:/opencv/opencv/build/include -IC:/Qt/6.4.3/mingw_64/include -IC:/Qt/6.4.3/mingw_64/include/QtWidgets -IC:/Qt/6.4.3/mingw_64/include/QtGui -IC:/Qt/6.4.3/mingw_64/include/QtCore -Irelease -I. -I/include -IC:/Qt/6.4.3/mingw_64/mkspecs/win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
 LIBS        =        -LC:/opencv/opencv/build/x64/vc16/lib -lopencv_world470 C:/opencv/opencv/release/bin/libopencv_core470.dll C:/opencv/opencv/release/bin/libopencv_highgui470.dll C:/opencv/opencv/release/bin/libopencv_imgcodecs470.dll C:/opencv/opencv/release/bin/libopencv_imgproc470.dll C:/opencv/opencv/release/bin/libopencv_calib3d470.dll C:/opencv/opencv/release/bin/libopencv_ml470.dll C:/opencv/opencv/release/bin/libopencv_objdetect470.dll C:/Qt/6.4.3/mingw_64/lib/libQt6Widgets.a C:/Qt/6.4.3/mingw_64/lib/libQt6Gui.a C:/Qt/6.4.3/mingw_64/lib/libQt6Core.a -lmingw32 C:/Qt/6.4.3/mingw_64/lib/libQt6EntryPoint.a -lshell32  
@@ -51,21 +51,29 @@ OBJECTS_DIR   = release/
 ####### Files
 
 SOURCES       = ../FaceRecognition/garbage.cpp \
+		../FaceRecognition/logistic.cpp \
 		../FaceRecognition/main.cpp \
 		../FaceRecognition/mainwindow.cpp \
+		../FaceRecognition/mypca.cpp \
 		../FaceRecognition/notWorkingPCA.cpp \
 		../FaceRecognition/recognition.cpp release/moc_mainwindow.cpp
 OBJECTS       = release/garbage.o \
+		release/logistic.o \
 		release/main.o \
 		release/mainwindow.o \
+		release/mypca.o \
 		release/notWorkingPCA.o \
 		release/recognition.o \
 		release/moc_mainwindow.o
 
-DIST          =  ../FaceRecognition/mainwindow.h \
+DIST          =  ../FaceRecognition/logistic.h \
+		../FaceRecognition/mainwindow.h \
+		../FaceRecognition/mypca.h \
 		../FaceRecognition/recognition.h ../FaceRecognition/garbage.cpp \
+		../FaceRecognition/logistic.cpp \
 		../FaceRecognition/main.cpp \
 		../FaceRecognition/mainwindow.cpp \
+		../FaceRecognition/mypca.cpp \
 		../FaceRecognition/notWorkingPCA.cpp \
 		../FaceRecognition/recognition.cpp
 QMAKE_TARGET  = FaceRecognition
@@ -87,10 +95,10 @@ qmake: FORCE
 qmake_all: FORCE
 
 dist:
-	$(ZIP) FaceRecognition.zip $(SOURCES) $(DIST) ../FaceRecognition/FaceRecognition.pro C:/Qt/6.4.3/mingw_64/mkspecs/features/spec_pre.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/device_config.prf C:/Qt/6.4.3/mingw_64/mkspecs/common/sanitize.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/gcc-base.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/g++-base.conf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/windows_vulkan_sdk.prf C:/Qt/6.4.3/mingw_64/mkspecs/common/windows-vulkan.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/g++-win32.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/windows-desktop.conf C:/Qt/6.4.3/mingw_64/mkspecs/qconfig.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_ext_freetype.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_ext_libjpeg.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_ext_libpng.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3danimation.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3danimation_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dcore.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dcore_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dextras.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dextras_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dinput.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dinput_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dlogic.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dlogic_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickanimation.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickanimation_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickextras.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickextras_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickinput.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickinput_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickrender.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickrender_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickscene2d.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickscene2d_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3drender.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3drender_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_activeqt.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_activeqt_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axbase_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axcontainer.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axcontainer_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axserver.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axserver_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_bluetooth.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_bluetooth_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_bodymovin_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_charts.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_charts_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_chartsqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_chartsqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_concurrent.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_concurrent_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core5compat.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core5compat_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualization.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualization_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualizationqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualizationqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_dbus.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_dbus_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_designer.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_designer_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_designercomponents_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_devicediscovery_support_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_entrypoint_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_fb_support_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_freetype_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_gui.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_gui_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_harfbuzz_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_help.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_help_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_httpserver.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_httpserver_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_jpeg_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_jsonrpc_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsanimation.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsanimation_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsfolderlistmodel.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsfolderlistmodel_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsqmlmodels.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsqmlmodels_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssettings.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssettings_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssharedimage.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssharedimage_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_languageserver_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediaquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_network.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_network_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_networkauth.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_networkauth_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_nfc.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_nfc_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_opengl.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_opengl_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_openglwidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_openglwidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_packetprotocol_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_png_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioning.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioning_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioningquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioningquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_printsupport.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_printsupport_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlcompiler_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlcore.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlcore_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmldebug_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmldom_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlintegration.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlintegration_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmllocalstorage.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmllocalstorage_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlmodels.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlmodels_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmltest.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmltest_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlworkerscript.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlworkerscript_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3d.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3d_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetimport.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetimport_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetutils.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetutils_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3deffects.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3deffects_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dglslparser_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dhelpers.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dhelpers_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3diblbaker.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3diblbaker_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticleeffects.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticleeffects_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticles.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticles_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysics.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysics_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysicshelpers.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysicshelpers_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3druntimerender.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3druntimerender_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dspatialaudio_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dutils.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dutils_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2impl.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2impl_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrolstestutilsprivate_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2quickimpl.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2quickimpl_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2utils.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2utils_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicklayouts.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicklayouts_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickparticles_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickshapes_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktemplates2.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktemplates2_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktestutilsprivate_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktimeline.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktimeline_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjects.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjects_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjectsqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjectsqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_repparser.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_repparser_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxmlqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxmlqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensors.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensors_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensorsquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensorsquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialbus.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialbus_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialport.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialport_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_shadertools.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_shadertools_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachine.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachine_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachineqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachineqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svg.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svg_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svgwidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svgwidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_testlib.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_testlib_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_texttospeech.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_texttospeech_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_tools_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_uiplugin.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_uitools.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_uitools_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_virtualkeyboard.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_virtualkeyboard_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webchannel.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webchannel_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_websockets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_websockets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webview.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webview_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webviewquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webviewquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_widgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_widgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_xml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_xml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_zlib_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/features/qt_functions.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qt_config.prf C:/Qt/6.4.3/mingw_64/mkspecs/win32-g++/qmake.conf C:/Qt/6.4.3/mingw_64/mkspecs/features/spec_post.prf .qmake.stash C:/Qt/6.4.3/mingw_64/mkspecs/features/exclusive_builds.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/toolchain.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/default_pre.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/default_pre.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/resolve_config.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/exclusive_builds_post.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/default_post.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/build_pass.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qml_debug.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/entrypoint.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/precompile_header.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/warn_on.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qt.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/resources_functions.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/resources.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/moc.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/opengl.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/uic.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qmake_use.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/file_copies.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/windows.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/testcase_targets.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/exceptions.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/yacc.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/lex.prf ../FaceRecognition/FaceRecognition.pro C:/Qt/6.4.3/mingw_64/lib/Qt6Widgets.prl C:/Qt/6.4.3/mingw_64/lib/Qt6Gui.prl C:/Qt/6.4.3/mingw_64/lib/Qt6Core.prl C:/Qt/6.4.3/mingw_64/lib/Qt6EntryPoint.prl    C:/Qt/6.4.3/mingw_64/mkspecs/features/data/dummy.cpp ../FaceRecognition/mainwindow.h ../FaceRecognition/recognition.h  ../FaceRecognition/garbage.cpp ../FaceRecognition/main.cpp ../FaceRecognition/mainwindow.cpp ../FaceRecognition/notWorkingPCA.cpp ../FaceRecognition/recognition.cpp ../FaceRecognition/mainwindow.ui    
+	$(ZIP) FaceRecognition.zip $(SOURCES) $(DIST) ../FaceRecognition/FaceRecognition.pro C:/Qt/6.4.3/mingw_64/mkspecs/features/spec_pre.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/device_config.prf C:/Qt/6.4.3/mingw_64/mkspecs/common/sanitize.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/gcc-base.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/g++-base.conf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/windows_vulkan_sdk.prf C:/Qt/6.4.3/mingw_64/mkspecs/common/windows-vulkan.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/g++-win32.conf C:/Qt/6.4.3/mingw_64/mkspecs/common/windows-desktop.conf C:/Qt/6.4.3/mingw_64/mkspecs/qconfig.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_ext_freetype.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_ext_libjpeg.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_ext_libpng.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3danimation.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3danimation_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dcore.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dcore_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dextras.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dextras_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dinput.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dinput_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dlogic.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dlogic_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickanimation.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickanimation_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickextras.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickextras_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickinput.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickinput_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickrender.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickrender_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickscene2d.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3dquickscene2d_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3drender.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_3drender_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_activeqt.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_activeqt_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axbase_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axcontainer.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axcontainer_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axserver.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_axserver_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_bluetooth.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_bluetooth_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_bodymovin_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_charts.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_charts_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_chartsqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_chartsqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_concurrent.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_concurrent_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core5compat.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core5compat_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_core_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualization.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualization_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualizationqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_datavisualizationqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_dbus.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_dbus_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_designer.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_designer_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_designercomponents_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_devicediscovery_support_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_entrypoint_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_fb_support_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_freetype_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_gui.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_gui_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_harfbuzz_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_help.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_help_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_httpserver.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_httpserver_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_jpeg_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_jsonrpc_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsanimation.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsanimation_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsfolderlistmodel.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsfolderlistmodel_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsqmlmodels.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labsqmlmodels_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssettings.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssettings_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssharedimage.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labssharedimage_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_labswavefrontmesh_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_languageserver_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_linguist_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimedia_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediaquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_multimediawidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_network.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_network_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_networkauth.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_networkauth_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_nfc.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_nfc_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_opengl.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_opengl_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_openglwidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_openglwidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_packetprotocol_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_png_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioning.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioning_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioningquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_positioningquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_printsupport.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_printsupport_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlcompiler_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlcore.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlcore_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmldebug_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmldom_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlintegration.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlintegration_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmllocalstorage.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmllocalstorage_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlmodels.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlmodels_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmltest.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmltest_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlworkerscript.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlworkerscript_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_qmlxmllistmodel_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3d.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3d_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetimport.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetimport_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetutils.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dassetutils_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3deffects.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3deffects_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dglslparser_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dhelpers.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dhelpers_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3diblbaker.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3diblbaker_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticleeffects.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticleeffects_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticles.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dparticles_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysics.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysics_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysicshelpers.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dphysicshelpers_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3druntimerender.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3druntimerender_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dspatialaudio_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dutils.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick3dutils_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2impl.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrols2impl_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickcontrolstestutilsprivate_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2quickimpl.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2quickimpl_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2utils.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickdialogs2utils_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicklayouts.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicklayouts_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickparticles_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickshapes_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktemplates2.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktemplates2_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktestutilsprivate_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktimeline.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quicktimeline_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_quickwidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjects.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjects_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjectsqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_remoteobjectsqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_repparser.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_repparser_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxmlqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_scxmlqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensors.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensors_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensorsquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sensorsquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialbus.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialbus_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialport.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_serialport_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_shadertools.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_shadertools_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_spatialaudio_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_sql_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachine.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachine_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachineqml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_statemachineqml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svg.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svg_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svgwidgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_svgwidgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_testlib.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_testlib_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_texttospeech.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_texttospeech_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_tools_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_uiplugin.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_uitools.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_uitools_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_virtualkeyboard.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_virtualkeyboard_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webchannel.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webchannel_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_websockets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_websockets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webview.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webview_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webviewquick.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_webviewquick_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_widgets.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_widgets_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_xml.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_xml_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/modules/qt_lib_zlib_private.pri C:/Qt/6.4.3/mingw_64/mkspecs/features/qt_functions.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qt_config.prf C:/Qt/6.4.3/mingw_64/mkspecs/win32-g++/qmake.conf C:/Qt/6.4.3/mingw_64/mkspecs/features/spec_post.prf .qmake.stash C:/Qt/6.4.3/mingw_64/mkspecs/features/exclusive_builds.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/toolchain.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/default_pre.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/default_pre.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/resolve_config.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/exclusive_builds_post.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/default_post.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/build_pass.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qml_debug.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/entrypoint.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/precompile_header.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/warn_on.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qt.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/resources_functions.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/resources.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/moc.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/opengl.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/uic.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/qmake_use.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/file_copies.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/win32/windows.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/testcase_targets.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/exceptions.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/yacc.prf C:/Qt/6.4.3/mingw_64/mkspecs/features/lex.prf ../FaceRecognition/FaceRecognition.pro C:/Qt/6.4.3/mingw_64/lib/Qt6Widgets.prl C:/Qt/6.4.3/mingw_64/lib/Qt6Gui.prl C:/Qt/6.4.3/mingw_64/lib/Qt6Core.prl C:/Qt/6.4.3/mingw_64/lib/Qt6EntryPoint.prl    C:/Qt/6.4.3/mingw_64/mkspecs/features/data/dummy.cpp ../FaceRecognition/logistic.h ../FaceRecognition/mainwindow.h ../FaceRecognition/mypca.h ../FaceRecognition/recognition.h  ../FaceRecognition/garbage.cpp ../FaceRecognition/logistic.cpp ../FaceRecognition/main.cpp ../FaceRecognition/mainwindow.cpp ../FaceRecognition/mypca.cpp ../FaceRecognition/notWorkingPCA.cpp ../FaceRecognition/recognition.cpp ../FaceRecognition/mainwindow.ui    
 
 clean: compiler_clean 
-	-$(DEL_FILE) release/garbage.o release/main.o release/mainwindow.o release/notWorkingPCA.o release/recognition.o release/moc_mainwindow.o
+	-$(DEL_FILE) release/garbage.o release/logistic.o release/main.o release/mainwindow.o release/mypca.o release/notWorkingPCA.o release/recognition.o release/moc_mainwindow.o
 
 distclean: clean 
 	-$(DEL_FILE) .qmake.stash
@@ -258,7 +266,7 @@ release/moc_mainwindow.cpp: ../FaceRecognition/mainwindow.h \
 		C:/Qt/6.4.3/mingw_64/include/QtWidgets/qtabwidget.h \
 		release/moc_predefs.h \
 		C:/Qt/6.4.3/mingw_64/bin/moc.exe
-	'C:\Qt\6.4.3\mingw_64\bin\moc.exe' $(DEFINES) --include 'D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/qt/build-FaceRecognition-Desktop_Qt_6_4_3_MinGW_64_bit-Debug/release/moc_predefs.h' -IC:/Qt/6.4.3/mingw_64/mkspecs/win32-g++ -I'D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/qt/FaceRecognition' -IC:/opencv/opencv/build/include -IC:/Qt/6.4.3/mingw_64/include -IC:/Qt/6.4.3/mingw_64/include/QtWidgets -IC:/Qt/6.4.3/mingw_64/include/QtGui -IC:/Qt/6.4.3/mingw_64/include/QtCore -I. -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ../FaceRecognition/mainwindow.h -o release/moc_mainwindow.cpp
+	'C:\Qt\6.4.3\mingw_64\bin\moc.exe' $(DEFINES) --include 'D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/qt/build-FaceRecognition-Desktop_Qt_6_4_3_MinGW_64_bit-Debug/release/moc_predefs.h' -IC:/Qt/6.4.3/mingw_64/mkspecs/win32-g++ -I'D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/qt/FaceRecognition' -IC:/Eigen -IC:/opencv/opencv/build/include -IC:/Qt/6.4.3/mingw_64/include -IC:/Qt/6.4.3/mingw_64/include/QtWidgets -IC:/Qt/6.4.3/mingw_64/include/QtGui -IC:/Qt/6.4.3/mingw_64/include/QtCore -I. -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++ -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include -IC:/Qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed -IC:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include ../FaceRecognition/mainwindow.h -o release/moc_mainwindow.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -285,6 +293,117 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 release/garbage.o: ../FaceRecognition/garbage.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/garbage.o ../FaceRecognition/garbage.cpp
+
+release/logistic.o: ../FaceRecognition/logistic.cpp ../FaceRecognition/logistic.h \
+		C:/opencv/opencv/build/include/opencv2/core.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvdef.h \
+		C:/opencv/opencv/build/include/opencv2/core/version.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/hal/interface.h \
+		C:/opencv/opencv/build/include/opencv2/core/cv_cpu_dispatch.h \
+		C:/opencv/opencv/build/include/opencv2/core/cv_cpu_helper.h \
+		C:/opencv/opencv/build/include/opencv2/core/hal/msa_macros.h \
+		C:/opencv/opencv/build/include/opencv2/core/fast_math.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/base.hpp \
+		C:/opencv/opencv/build/include/opencv2/opencv_modules.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvstd.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvstd_wrapper.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/neon_utils.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/vsx_utils.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/check.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/traits.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/matx.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/saturate.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/types.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/mat.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/bufferpool.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/mat.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/persistence.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/operations.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvstd.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/utility.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/utils/instrumentation.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/utils/tls.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/optim.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/ovx.hpp \
+		../FaceRecognition/recognition.h \
+		C:/opencv/opencv/build/include/opencv2/opencv.hpp \
+		C:/opencv/opencv/build/include/opencv2/calib3d.hpp \
+		C:/opencv/opencv/build/include/opencv2/features2d.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/miniflann.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/defines.h \
+		C:/opencv/opencv/build/include/opencv2/flann/config.h \
+		C:/opencv/opencv/build/include/opencv2/core/affine.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/dnn.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/async.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/version.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/dict.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/layer.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/dnn.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/utils/inference_engine.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/flann_base.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/general.h \
+		C:/opencv/opencv/build/include/opencv2/flann/matrix.h \
+		C:/opencv/opencv/build/include/opencv2/flann/params.h \
+		C:/opencv/opencv/build/include/opencv2/flann/any.h \
+		C:/opencv/opencv/build/include/opencv2/flann/saving.h \
+		C:/opencv/opencv/build/include/opencv2/flann/nn_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/result_set.h \
+		C:/opencv/opencv/build/include/opencv2/flann/all_indices.h \
+		C:/opencv/opencv/build/include/opencv2/flann/kdtree_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/dynamic_bitset.h \
+		C:/opencv/opencv/build/include/opencv2/flann/dist.h \
+		C:/opencv/opencv/build/include/opencv2/flann/heap.h \
+		C:/opencv/opencv/build/include/opencv2/flann/allocator.h \
+		C:/opencv/opencv/build/include/opencv2/flann/random.h \
+		C:/opencv/opencv/build/include/opencv2/flann/kdtree_single_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/kmeans_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/logger.h \
+		C:/opencv/opencv/build/include/opencv2/flann/composite_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/linear_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/hierarchical_clustering_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/lsh_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/lsh_table.h \
+		C:/opencv/opencv/build/include/opencv2/flann/autotuned_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/ground_truth.h \
+		C:/opencv/opencv/build/include/opencv2/flann/index_testing.h \
+		C:/opencv/opencv/build/include/opencv2/flann/timer.h \
+		C:/opencv/opencv/build/include/opencv2/flann/sampling.h \
+		C:/opencv/opencv/build/include/opencv2/highgui.hpp \
+		C:/opencv/opencv/build/include/opencv2/imgcodecs.hpp \
+		C:/opencv/opencv/build/include/opencv2/videoio.hpp \
+		C:/opencv/opencv/build/include/opencv2/imgproc.hpp \
+		C:/opencv/opencv/build/include/opencv2/imgproc/segmentation.hpp \
+		C:/opencv/opencv/build/include/opencv2/ml.hpp \
+		C:/opencv/opencv/build/include/opencv2/ml/ml.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/detection_based_tracker.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/face.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/aruco_detector.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/aruco_dictionary.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/aruco_board.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/charuco_detector.hpp \
+		C:/opencv/opencv/build/include/opencv2/photo.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/warpers.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/warpers.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cuda.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cuda_types.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cuda.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/warpers_inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/matchers.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/motion_estimators.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/util.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/util_inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/camera.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/exposure_compensate.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/seam_finders.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/blenders.hpp \
+		C:/opencv/opencv/build/include/opencv2/video.hpp \
+		C:/opencv/opencv/build/include/opencv2/video/tracking.hpp \
+		C:/opencv/opencv/build/include/opencv2/video/background_segm.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/logistic.o ../FaceRecognition/logistic.cpp
 
 release/main.o: ../FaceRecognition/main.cpp ../FaceRecognition/mainwindow.h \
 		C:/Qt/6.4.3/mingw_64/include/QtWidgets/QMainWindow \
@@ -554,7 +673,240 @@ release/main.o: ../FaceRecognition/main.cpp ../FaceRecognition/mainwindow.h \
 		C:/opencv/opencv/build/include/opencv2/stitching/detail/blenders.hpp \
 		C:/opencv/opencv/build/include/opencv2/video.hpp \
 		C:/opencv/opencv/build/include/opencv2/video/tracking.hpp \
-		C:/opencv/opencv/build/include/opencv2/video/background_segm.hpp
+		C:/opencv/opencv/build/include/opencv2/video/background_segm.hpp \
+		C:/Eigen/eigen-git-mirror/Eigen/Dense \
+		C:/Eigen/eigen-git-mirror/Eigen/Core \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/DisableStupidWarnings.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Macros.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ConfigureVectorization.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/MKL_support.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/blas.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Constants.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Meta.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ForwardDeclarations.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/StaticAssert.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/XprHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Memory.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/IntegralConstant.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/SymbolicIndex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/NumTraits.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/GenericPacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MathFunctionsImpl.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/ConjHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/Half.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AltiVec/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AltiVec/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AltiVec/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/ZVector/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/ZVector/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/ZVector/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/MSA/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/MSA/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/MSA/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/GPU/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/GPU/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/GPU/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/SyclMemoryModel.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/InteropHeaders.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/Settings.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/TernaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/BinaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/UnaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/NullaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/StlFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/AssignmentFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/CUDA/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/IndexedViewHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ReshapedHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ArithmeticSequence.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/IO.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DenseCoeffsBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DenseBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/CommonCwiseUnaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/BlockMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/IndexedViewMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/ReshapedMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MatrixBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/CommonCwiseBinaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/EigenBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Product.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CoreEvaluators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/AssignEvaluator.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Assign.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ArrayBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/ArrayCwiseUnaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/ArrayCwiseBinaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/BlasUtil.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DenseStorage.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/NestByValue.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ReturnByValue.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/NoAlias.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/PlainObjectBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Matrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Array.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseTernaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseBinaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseUnaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseNullaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseUnaryView.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SelfCwiseBinaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Dot.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/StableNorm.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Stride.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MapBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Map.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Ref.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Block.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/VectorBlock.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/IndexedView.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Reshaped.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Transpose.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DiagonalMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Diagonal.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DiagonalProduct.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Redux.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Visitor.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Fuzzy.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Swap.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CommaInitializer.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/GeneralProduct.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Solve.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Inverse.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SolverBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/PermutationMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Transpositions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/TriangularMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SelfAdjointView.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/Parallelizer.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ProductEvaluators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SolveTriangular.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointProduct.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointRank2Update.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/BandMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CoreIterators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ConditionEstimator.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/BooleanRedux.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Select.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/VectorwiseOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/PartialReduxEvaluator.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Random.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Replicate.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Reverse.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ArrayWrapper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/StlIterators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixVector_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixVector_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixVector_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Assign_MKL.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/GlobalFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ReenableStupidWarnings.h \
+		C:/Eigen/eigen-git-mirror/Eigen/LU \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/Kernel.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/Image.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/FullPivLU.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/PartialPivLU.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/lapacke.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/lapacke_mangling.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/PartialPivLU_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/Determinant.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/InverseImpl.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/arch/Inverse_SSE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Cholesky \
+		C:/Eigen/eigen-git-mirror/Eigen/Jacobi \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Jacobi/Jacobi.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Cholesky/LLT.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Cholesky/LDLT.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Cholesky/LLT_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/QR \
+		C:/Eigen/eigen-git-mirror/Eigen/Householder \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Householder/Householder.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Householder/HouseholderSequence.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Householder/BlockHouseholder.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/HouseholderQR.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/FullPivHouseholderQR.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/ColPivHouseholderQR.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/CompleteOrthogonalDecomposition.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/HouseholderQR_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/SVD \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/RealSvd2x2.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/UpperBidiagonalization.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/SVDBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/JacobiSVD.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/BDCSVD.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/JacobiSVD_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Geometry \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/OrthoMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/EulerAngles.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Homogeneous.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/RotationBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Rotation2D.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Quaternion.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/AngleAxis.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Transform.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Translation.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Scaling.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Hyperplane.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/ParametrizedLine.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/AlignedBox.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Umeyama.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/arch/Geometry_SSE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Eigenvalues \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/Tridiagonalization.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/RealSchur.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/EigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexSchur.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/RealQZ.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/RealSchur_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h \
+		../FaceRecognition/logistic.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/main.o ../FaceRecognition/main.cpp
 
 release/mainwindow.o: ../FaceRecognition/mainwindow.cpp ../FaceRecognition/mainwindow.h \
@@ -727,6 +1079,348 @@ release/mainwindow.o: ../FaceRecognition/mainwindow.cpp ../FaceRecognition/mainw
 		C:/Qt/6.4.3/mingw_64/include/QtWidgets/qstatusbar.h \
 		C:/Qt/6.4.3/mingw_64/include/QtWidgets/QWidget
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/mainwindow.o ../FaceRecognition/mainwindow.cpp
+
+release/mypca.o: ../FaceRecognition/mypca.cpp ../FaceRecognition/MyPCA.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Dense \
+		C:/Eigen/eigen-git-mirror/Eigen/Core \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/DisableStupidWarnings.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Macros.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ConfigureVectorization.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/MKL_support.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/blas.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Constants.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Meta.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ForwardDeclarations.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/StaticAssert.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/XprHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/Memory.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/IntegralConstant.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/SymbolicIndex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/NumTraits.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/GenericPacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MathFunctionsImpl.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/ConjHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/Half.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/GenericPacketMathFunctionsFwd.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SSE/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AVX512/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AltiVec/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AltiVec/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/AltiVec/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/NEON/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/ZVector/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/ZVector/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/ZVector/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/MSA/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/MSA/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/MSA/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/GPU/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/GPU/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/GPU/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/SyclMemoryModel.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/InteropHeaders.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/PacketMath.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/MathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/SYCL/TypeCasting.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/Settings.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/Default/GenericPacketMathFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/TernaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/BinaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/UnaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/NullaryFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/StlFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/functors/AssignmentFunctors.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/arch/CUDA/Complex.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/IndexedViewHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ReshapedHelper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ArithmeticSequence.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/IO.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DenseCoeffsBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DenseBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/CommonCwiseUnaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/BlockMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/IndexedViewMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/ReshapedMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MatrixBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/CommonCwiseBinaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/MatrixCwiseUnaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/MatrixCwiseBinaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/EigenBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Product.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CoreEvaluators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/AssignEvaluator.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Assign.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ArrayBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/ArrayCwiseUnaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/plugins/ArrayCwiseBinaryOps.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/BlasUtil.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DenseStorage.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/NestByValue.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ReturnByValue.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/NoAlias.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/PlainObjectBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Matrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Array.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseTernaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseBinaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseUnaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseNullaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CwiseUnaryView.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SelfCwiseBinaryOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Dot.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/StableNorm.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Stride.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/MapBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Map.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Ref.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Block.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/VectorBlock.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/IndexedView.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Reshaped.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Transpose.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DiagonalMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Diagonal.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/DiagonalProduct.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Redux.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Visitor.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Fuzzy.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Swap.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CommaInitializer.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/GeneralProduct.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Solve.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Inverse.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SolverBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/PermutationMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Transpositions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/TriangularMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SelfAdjointView.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralBlockPanelKernel.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/Parallelizer.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ProductEvaluators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/SolveTriangular.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrixTriangular.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointProduct.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointRank2Update.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverVector.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/BandMatrix.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/CoreIterators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ConditionEstimator.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/BooleanRedux.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Select.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/VectorwiseOp.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/PartialReduxEvaluator.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Random.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Replicate.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Reverse.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/ArrayWrapper.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/StlIterators.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixVector_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/GeneralMatrixMatrixTriangular_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/SelfadjointMatrixVector_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularMatrixVector_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/products/TriangularSolverMatrix_BLAS.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/Assign_MKL.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/GlobalFunctions.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Core/util/ReenableStupidWarnings.h \
+		C:/Eigen/eigen-git-mirror/Eigen/LU \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/Kernel.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/Image.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/FullPivLU.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/PartialPivLU.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/lapacke.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/lapacke_mangling.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/PartialPivLU_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/Determinant.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/InverseImpl.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/LU/arch/Inverse_SSE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Cholesky \
+		C:/Eigen/eigen-git-mirror/Eigen/Jacobi \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Jacobi/Jacobi.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Cholesky/LLT.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Cholesky/LDLT.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Cholesky/LLT_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/QR \
+		C:/Eigen/eigen-git-mirror/Eigen/Householder \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Householder/Householder.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Householder/HouseholderSequence.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Householder/BlockHouseholder.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/HouseholderQR.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/FullPivHouseholderQR.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/ColPivHouseholderQR.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/CompleteOrthogonalDecomposition.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/HouseholderQR_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/QR/ColPivHouseholderQR_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/SVD \
+		C:/Eigen/eigen-git-mirror/Eigen/src/misc/RealSvd2x2.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/UpperBidiagonalization.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/SVDBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/JacobiSVD.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/BDCSVD.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/SVD/JacobiSVD_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Geometry \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/OrthoMethods.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/EulerAngles.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Homogeneous.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/RotationBase.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Rotation2D.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Quaternion.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/AngleAxis.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Transform.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Translation.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Scaling.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Hyperplane.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/ParametrizedLine.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/AlignedBox.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/Umeyama.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Geometry/arch/Geometry_SSE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/Eigenvalues \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/Tridiagonalization.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/RealSchur.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/HessenbergDecomposition.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/EigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/SelfAdjointEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexSchur.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/RealQZ.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/RealSchur_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/ComplexSchur_LAPACKE.h \
+		C:/Eigen/eigen-git-mirror/Eigen/src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h \
+		C:/opencv/opencv/build/include/opencv2/opencv.hpp \
+		C:/opencv/opencv/build/include/opencv2/opencv_modules.hpp \
+		C:/opencv/opencv/build/include/opencv2/core.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvdef.h \
+		C:/opencv/opencv/build/include/opencv2/core/version.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/hal/interface.h \
+		C:/opencv/opencv/build/include/opencv2/core/cv_cpu_dispatch.h \
+		C:/opencv/opencv/build/include/opencv2/core/cv_cpu_helper.h \
+		C:/opencv/opencv/build/include/opencv2/core/hal/msa_macros.h \
+		C:/opencv/opencv/build/include/opencv2/core/fast_math.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/base.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvstd.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvstd_wrapper.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/neon_utils.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/vsx_utils.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/check.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/traits.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/matx.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/saturate.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/types.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/mat.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/bufferpool.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/mat.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/persistence.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/operations.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cvstd.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/utility.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/utils/instrumentation.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/utils/tls.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/optim.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/ovx.hpp \
+		C:/opencv/opencv/build/include/opencv2/calib3d.hpp \
+		C:/opencv/opencv/build/include/opencv2/features2d.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/miniflann.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/defines.h \
+		C:/opencv/opencv/build/include/opencv2/flann/config.h \
+		C:/opencv/opencv/build/include/opencv2/core/affine.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/dnn.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/async.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/version.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/dict.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/layer.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/dnn.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/dnn/utils/inference_engine.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/flann_base.hpp \
+		C:/opencv/opencv/build/include/opencv2/flann/general.h \
+		C:/opencv/opencv/build/include/opencv2/flann/matrix.h \
+		C:/opencv/opencv/build/include/opencv2/flann/params.h \
+		C:/opencv/opencv/build/include/opencv2/flann/any.h \
+		C:/opencv/opencv/build/include/opencv2/flann/saving.h \
+		C:/opencv/opencv/build/include/opencv2/flann/nn_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/result_set.h \
+		C:/opencv/opencv/build/include/opencv2/flann/all_indices.h \
+		C:/opencv/opencv/build/include/opencv2/flann/kdtree_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/dynamic_bitset.h \
+		C:/opencv/opencv/build/include/opencv2/flann/dist.h \
+		C:/opencv/opencv/build/include/opencv2/flann/heap.h \
+		C:/opencv/opencv/build/include/opencv2/flann/allocator.h \
+		C:/opencv/opencv/build/include/opencv2/flann/random.h \
+		C:/opencv/opencv/build/include/opencv2/flann/kdtree_single_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/kmeans_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/logger.h \
+		C:/opencv/opencv/build/include/opencv2/flann/composite_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/linear_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/hierarchical_clustering_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/lsh_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/lsh_table.h \
+		C:/opencv/opencv/build/include/opencv2/flann/autotuned_index.h \
+		C:/opencv/opencv/build/include/opencv2/flann/ground_truth.h \
+		C:/opencv/opencv/build/include/opencv2/flann/index_testing.h \
+		C:/opencv/opencv/build/include/opencv2/flann/timer.h \
+		C:/opencv/opencv/build/include/opencv2/flann/sampling.h \
+		C:/opencv/opencv/build/include/opencv2/highgui.hpp \
+		C:/opencv/opencv/build/include/opencv2/imgcodecs.hpp \
+		C:/opencv/opencv/build/include/opencv2/videoio.hpp \
+		C:/opencv/opencv/build/include/opencv2/imgproc.hpp \
+		C:/opencv/opencv/build/include/opencv2/imgproc/segmentation.hpp \
+		C:/opencv/opencv/build/include/opencv2/ml.hpp \
+		C:/opencv/opencv/build/include/opencv2/ml/ml.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/detection_based_tracker.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/face.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/aruco_detector.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/aruco_dictionary.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/aruco_board.hpp \
+		C:/opencv/opencv/build/include/opencv2/objdetect/charuco_detector.hpp \
+		C:/opencv/opencv/build/include/opencv2/photo.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/warpers.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/warpers.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cuda.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cuda_types.hpp \
+		C:/opencv/opencv/build/include/opencv2/core/cuda.inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/warpers_inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/matchers.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/motion_estimators.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/util.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/util_inl.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/camera.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/exposure_compensate.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/seam_finders.hpp \
+		C:/opencv/opencv/build/include/opencv2/stitching/detail/blenders.hpp \
+		C:/opencv/opencv/build/include/opencv2/video.hpp \
+		C:/opencv/opencv/build/include/opencv2/video/tracking.hpp \
+		C:/opencv/opencv/build/include/opencv2/video/background_segm.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/mypca.o ../FaceRecognition/mypca.cpp
 
 release/notWorkingPCA.o: ../FaceRecognition/notWorkingPCA.cpp ../FaceRecognition/recognition.h \
 		C:/opencv/opencv/build/include/opencv2/opencv.hpp \
