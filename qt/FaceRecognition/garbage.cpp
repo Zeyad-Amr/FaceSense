@@ -399,3 +399,22 @@
 ////    a.exec();
 ////    return 0;
 ////}
+
+
+//SVM
+    // Train an SVM classifier on the reduced data
+//    Ptr<SVM> svm = SVM::create();
+//    svm->setType(SVM::C_SVC);
+//    svm->setKernel(SVM::RBF);
+//    svm->setGamma(1e-4);
+//    svm->setC(100);
+//    svm->train(reduced_train_data, ROW_SAMPLE, train_labels);
+
+//    // Predict labels for the test data using the trained SVM classifier
+//    Mat predictions;
+//    svm->predict(reduced_test_data, predictions);
+
+    // printing accuracy
+//    double accuracy = recognition().calculateAccuracy(predictions, test_labels);
+//    cout << "Accuracy: " << accuracy << endl;
+//SVM

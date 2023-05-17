@@ -25,7 +25,7 @@ cv::Mat vectorToMat(const std::vector<double>& vec) {
     uniqueValues.erase(last, uniqueValues.end());
 
     cv::Mat mat(uniqueValues.size(), 1, CV_32S);
-    for (int i = 0; i < uniqueValues.size(); ++i) {
+    for (int i = 0; i < (int)uniqueValues.size(); ++i) {
         mat.at<int>(i, 0) = static_cast<int>(uniqueValues[i]);
 
     }
@@ -35,11 +35,9 @@ cv::Mat vectorToMat(const std::vector<double>& vec) {
 
 double sigmoid(double z) {
 
-//    cout<<z<<'\n';
     double g = 1 / (1 + exp(-z));
     return g;
 }
-#include <typeinfo>
 
 
 std::pair<cv::Mat, double> compute_gradient_logistic(const cv::Mat& X, const cv::Mat& y, const cv::Mat& w, double b, double lambda_) {
@@ -77,11 +75,9 @@ std::pair<cv::Mat, double> gradient_descent(const cv::Mat& X, const cv::Mat& y, 
     double b = b_in;
 
     for (int i = 0; i < num_iters; ++i) {
-        // Calculate the gradient and update the parameters
 
-//        cout << "before compute_gradient_logistic\n";
+        // Calculate the gradient and update the parameters
         std::pair<cv::Mat, double> gradients = compute_gradient_logistic(X, y, w, b, lambda_);
-//        cout << "after compute_gradient_logistic\n";
 
         cv::Mat dj_dw = gradients.first;
         double dj_db = gradients.second;
@@ -98,20 +94,16 @@ std::pair<cv::Mat, double> gradient_descent(const cv::Mat& X, const cv::Mat& y, 
 
 cv::Mat one_vs_all(const cv::Mat& y, int class_label) {
     cv::Mat y_binary = cv::Mat::zeros(y.size(), CV_32S);
-//    cout<<"one vs all";
+
     for (int i = 0; i < y.rows; i++) {
         if (y.at<int>(i) == class_label) {
             y_binary.at<int>(i) = 1;
         }
-//        cout<<y_binary.at<int>(i)<<' ';
     }
-//    cout<<'\n';
 
 
     return y_binary;
 }
-#include <opencv2/core.hpp>
-#include <unordered_map>
 
 std::unordered_map<int, std::pair<cv::Mat, double>> train_one_vs_all(const cv::Mat& X, const cv::Mat& y, const cv::Mat& w_in, double b_in, double alpha, int num_iters, double lambda_) {
     cv::Mat w = w_in.clone();
@@ -125,13 +117,12 @@ std::unordered_map<int, std::pair<cv::Mat, double>> train_one_vs_all(const cv::M
 
 
     for (int i = 0; i < unique_classes.rows; ++i) {
-        cout<<unique_classes.at<int>(i,0)<<' ';
+//        cout<<unique_classes.at<int>(i,0)<<' ';
         int class_label = unique_classes.at<int>(i, 0);
         cv::Mat y_binary = one_vs_all(y, class_label);
 
-//        cout << "before gradientdiscent\n";
         std::pair<cv::Mat, double> model = gradient_descent(X.clone(), y_binary.clone(), w, b, alpha, num_iters, lambda_);
-//        cout << "after gradientdiscent\n";
+
         w = w_in.clone();
         b = b_in;
         models[class_label] = model;
@@ -151,6 +142,7 @@ cv::Mat predict_multi_class(const cv::Mat& X, const std::unordered_map<int, std:
             cv::Mat w = model.second.first;
             double b = model.second.second;
 
+            //dot product
             double sum = 0;
             for(int j=0;j<w.rows;j++){
                 sum += (X.at<float>(i,j)*w.at<float>(j,0));
@@ -187,20 +179,4 @@ float calculate_accuracy(const cv::Mat& y_true, const cv::Mat& y_pred) {
 
     float accuracy = static_cast<float>(correct) / y_true.rows * 100.0f;
     return accuracy;
-}
-cv::Mat predict(const cv::Mat& X, const cv::Mat& w, double b) {
-    CV_Assert(X.cols == w.rows);
-
-    cv::Mat z = X * w + b;
-    cv::Mat y_pred(z.rows,1,CV_32S);
-    for(int i=0;i<z.rows;i++){
-        cout<<z.at<float>(i,0)<<' ';
-        int prediction = round((sigmoid(z.at<float>(i,0))));
-        y_pred.at<int>(i,0) = static_cast<int>(prediction);
-        cout<<prediction<<' ';
-    }
-
-    y_pred.convertTo(y_pred, CV_32S);
-
-    return y_pred;
 }
