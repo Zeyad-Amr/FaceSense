@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     garbage.cpp \
+    logistic.cpp \
     main.cpp \
     mainwindow.cpp \
     mypca.cpp \
@@ -17,6 +18,7 @@ SOURCES += \
     recognition.cpp
 
 HEADERS += \
+    logistic.h \
     mainwindow.h \
     mypca.h \
     recognition.h
