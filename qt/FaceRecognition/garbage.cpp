@@ -358,3 +358,44 @@
 //    // Return the transformed data
 //    return transformed_data;
 //}
+
+//// int main(int argc,char *argv[])
+////{
+////     QApplication a(argc,argv);
+
+////    // Load the cascade classifier XML file for face detection
+////    cv::CascadeClassifier faceCascade;
+////    faceCascade.load("C:/opencv/opencv/sources/data/haarcascades_cuda/haarcascade_frontalface_default.xml");
+
+////    // Load the image file
+////    cv::Mat image = cv::imread("D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/archive/zeyad9_44.jpg");
+////    if (image.empty())
+////    {
+////        std::cout << "Failed to open the image file." << std::endl;
+////        return -1;
+////    }
+
+////    // Convert the image to grayscale for face detection
+////    cv::Mat grayImage;
+////    cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
+
+////    // Perform face detection
+////    std::vector<cv::Rect> faces;
+////    faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | cv::CASCADE_SCALE_IMAGE, cv::Size(30, 30));
+
+////    // Display the detected faces as separate images
+////    int faceCount = 0;
+////    for (const auto& faceRect : faces)
+////    {
+////        cv::Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
+
+////        std::string windowName = "Detected Face " + std::to_string(faceCount);
+////        cv::imshow(windowName, faceImage);
+////        cv::waitKey(0);
+////        cv::destroyWindow(windowName);
+
+////        faceCount++;
+////    }
+////    a.exec();
+////    return 0;
+////}
