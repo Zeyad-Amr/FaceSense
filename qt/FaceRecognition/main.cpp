@@ -218,6 +218,7 @@
 //Zeyad's main
 #include "recognition.h"
 #include "MyPCA.h"
+#include "logistic.h"
 
 int main(int argc, char *argv[])
 {
@@ -271,7 +272,7 @@ int main(int argc, char *argv[])
     vector<double> y_train;
     vector<double> y_test;
 
-    recognition().train_test_split(X, y, 0.8, 40, x_train, x_test, y_train, y_test);
+    recognition().train_test_split(X, y, 0.8, 45, x_train, x_test, y_train, y_test);
 
     cout << "Finished train test split\n";
 
@@ -311,31 +312,62 @@ int main(int argc, char *argv[])
     // Reduce the dimensionality of the data using PCA
 
     // Reduce the dimensionality of the data using PCA
-        PCA pca(train_data, Mat(), PCA::DATA_AS_ROW, 150);
+    PCA pca(train_data, Mat(), PCA::DATA_AS_ROW, 150);
 
-      Mat  reduced_train_data = pca.project(train_data);
-      Mat  reduced_test_data = pca.project(test_data);
+    Mat  reduced_train_data = pca.project(train_data);
+    Mat  reduced_test_data = pca.project(test_data);
 
 //    MyPCA pca(train_data, 150);
 
 //    Mat reduced_train_data = pca.reduceData(train_data);
 //    Mat reduced_test_data = pca.reduceData(test_data);
 
+//SVM
     // Train an SVM classifier on the reduced data
-    Ptr<SVM> svm = SVM::create();
-    svm->setType(SVM::C_SVC);
-    svm->setKernel(SVM::RBF);
-    svm->setGamma(1e-4);
-    svm->setC(100);
-    svm->train(reduced_train_data, ROW_SAMPLE, train_labels);
+//    Ptr<SVM> svm = SVM::create();
+//    svm->setType(SVM::C_SVC);
+//    svm->setKernel(SVM::RBF);
+//    svm->setGamma(1e-4);
+//    svm->setC(100);
+//    svm->train(reduced_train_data, ROW_SAMPLE, train_labels);
 
-    // Predict labels for the test data using the trained SVM classifier
-    Mat predictions;
-    svm->predict(reduced_test_data, predictions);
+//    // Predict labels for the test data using the trained SVM classifier
+//    Mat predictions;
+//    svm->predict(reduced_test_data, predictions);
 
     // printing accuracy
-    double accuracy = recognition().calculateAccuracy(predictions, test_labels);
-    cout << "Accuracy: " << accuracy << endl;
+//    double accuracy = recognition().calculateAccuracy(predictions, test_labels);
+//    cout << "Accuracy: " << accuracy << endl;
+//SVM
+    cout << "before logistic\n";
+
+    //LOGISTIC
+    cv::Mat w_tmp(reduced_train_data.cols, 1, CV_32F, cv::Scalar(1.0));
+        double b_tmp = 0.0;
+        double alph = 1;
+        int iters = 200;
+        double lambda_tmp = 0.7;
+
+        //single model
+        cv::Mat yPredFrom1Model;
+        pair<cv::Mat,double> w_b = gradient_descent(reduced_train_data, train_labels, w_tmp, b_tmp, alph, iters, lambda_tmp);
+        yPredFrom1Model = predict(reduced_test_data,w_b.first,w_b.second);
+        float accuracy = calculate_accuracy(test_labels, yPredFrom1Model);
+        std::cout << "Accuracy: " << accuracy << "%" << std::endl;
+
+
+        cout << "before one vs all\n";
+        std::unordered_map<int, std::pair<cv::Mat, double>> models = train_one_vs_all(reduced_train_data, train_labels, w_tmp, b_tmp, alph, iters, lambda_tmp);
+        cout << "after one vs all\n";
+
+        cout << "before predict multiclass\n";
+        cv::Mat y_pred = predict_multi_class(reduced_test_data, models);
+        cout << "after predict multiclass\n";
+
+        accuracy = calculate_accuracy(test_labels, y_pred);
+        std::cout << "Accuracy: " << accuracy << "%" << std::endl;
+    //LOGISTIC
+        cout << "after logistic\n";
 
     // Predicting for incoming image
     Mat grayImage = imread("D:/SBME/3rd year/2nd term/CV/Ass 5/FaceSense/orl faces/test_42.jpg", 0); // read image
@@ -348,6 +380,7 @@ int main(int argc, char *argv[])
     // Resize the image
     Size targetSize(50, 50);
     resize(grayImage, grayImage, targetSize);
+
 
     // Perform face detection
     faces.clear();
@@ -392,7 +425,7 @@ int main(int argc, char *argv[])
 
     // Predict labels for the test data using the trained SVM classifier
     Mat predictions_for_incoming;
-    svm->predict(reduced_incoming_data, predictions_for_incoming);
+//    svm->predict(reduced_incoming_data, predictions_for_incoming);
     for (int i = 0; i < predictions_for_incoming.rows; ++i)
     {
         cout << "prediction for incoming: " << predictions_for_incoming.at<float>(i) << endl;
