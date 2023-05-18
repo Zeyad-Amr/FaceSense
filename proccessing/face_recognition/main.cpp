@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     faceCascade.load("C:/opencv/sources/data/haarcascades_cuda/haarcascade_frontalface_default.xml");
 
     vector<Rect> faces;
-    string path = "../../../orl faces/archive/*"; // path to directory containing images
+    string path = "../../../orl faces/cropped/*"; // path to directory containing images
     vector<string> filenames;
     glob(path, filenames);
 
@@ -35,14 +35,14 @@ int main(int argc, char *argv[])
 
         // Display the detected faces as separate images
         //        int faceCount = 0;
-        for (const auto &faceRect : faces)
-        {
-            Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
+//        for (const auto &faceRect : faces)
+//        {
+//            Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
 
-            vector<double> flattenedImg = recognition().flatten(grayImage);
-            X.push_back(flattenedImg);
-            y.push_back(recognition().getClassFromName(filenames[i]));
-        }
+        vector<double> flattenedImg = recognition().flatten(grayImage);
+        X.push_back(flattenedImg);
+        y.push_back(recognition().getClassFromName(filenames[i]));
+//        }
     }
 
     cout << "Finished getting input\n";
@@ -93,10 +93,10 @@ int main(int argc, char *argv[])
     // Reduce the dimensionality of the data using PCA
 
     // Reduce the dimensionality of the data using PCA
-    //    PCA pca(train_data, Mat(), PCA::DATA_AS_ROW, 150);
-    //
-    //    reduced_train_data = pca.project(train_data);
-    //    reduced_test_data = pca.project(test_data);
+//    PCA pca(train_data, Mat(), PCA::DATA_AS_ROW, 150);
+
+//    Mat  reduced_train_data = pca.project(train_data);
+//    Mat  reduced_test_data = pca.project(test_data);
 
     MyPCA pca(train_data, 150);
 
@@ -136,21 +136,8 @@ int main(int argc, char *argv[])
     vector<vector<double>> incoming_data_vec; // the whole incoming data
     faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
 
-    bool thereIsFace = false;
-    for (const auto &faceRect : faces)
-    {
-        thereIsFace = true;
-        Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
-
-        vector<double> flattenedImg = recognition().flatten(grayImage);
-        incoming_data_vec.push_back(flattenedImg);
-    }
-
-    if (!thereIsFace)
-    {
-        cout << "No faces in the incoming Photo\n";
-        return 0;
-    }
+    vector<double> flattenedImg = recognition().flatten(grayImage);
+    incoming_data_vec.push_back(flattenedImg);
 
     // Convert the input data to OpenCV format
     int numOfFaces = incoming_data_vec.size();
@@ -169,10 +156,10 @@ int main(int argc, char *argv[])
     }
 
     // Reduce the dimensionality of the data using PCA
-    //    Mat reduced_incoming_data = pca.project(incomingData);
+//    Mat reduced_incoming_data = pca.project(incomingData);
     Mat reduced_incoming_data = pca.reduceData(incomingData);
-
     // Predict labels for the test data using the trained SVM classifier
+
     Mat predictions_for_incoming;
     svm->predict(reduced_incoming_data, predictions_for_incoming);
     for (int i = 0; i < predictions_for_incoming.rows; ++i)
