@@ -8,9 +8,12 @@ The facial recognition system includes the following features:
 
 - Face detection using a built-in algorithm implemented in C++.
 - Feature extraction using the PCA/Eigen analysis technique.
-- Recognition of faces based on the Euclidean distance between the projected image and the eigenfaces of known faces.
+- Recognition of faces based on SVM.
 - Robustness to variations in lighting conditions and facial expressions.
 - Evaluation of system performance using the ROC curve.
+
+![WhatsApp Image 2023-05-18 at 08 11 05](https://github.com/Zeyad-Amr/FaceSense/assets/84642500/f6cd2b74-97a2-42a7-b819-88bb520b54eb)
+
 
 ## Technologies Used
 
