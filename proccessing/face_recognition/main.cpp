@@ -31,18 +31,18 @@ int main(int argc, char *argv[])
         }
 
         // Perform face detection
-        faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
+//        faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
 
         // Display the detected faces as separate images
         //        int faceCount = 0;
-        for (const auto &faceRect : faces)
-        {
-            Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
+//        for (const auto &faceRect : faces)
+//        {
+//            Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
 
             vector<double> flattenedImg = recognition().flatten(grayImage);
             X.push_back(flattenedImg);
             y.push_back(recognition().getClassFromName(filenames[i]));
-        }
+//        }
     }
 
     cout << "Finished getting input\n";
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     //
     //    reduced_train_data = pca.project(train_data);
     //    reduced_test_data = pca.project(test_data);
-
+    cout<<train_data.rows<<" x "<< train_data.cols<<endl;
     MyPCA pca(train_data, 150);
 
     Mat reduced_train_data = pca.reduceData(train_data);
@@ -120,44 +120,46 @@ int main(int argc, char *argv[])
     cout << "Accuracy: " << accuracy << endl;
 
     // Predicting for incoming image
-    Mat grayImage = imread("../../../orl faces/test_42.jpg", 0); // read image
+    Mat grayImage = imread("../../../orl faces/archive/zeyad2_44.jpg", 0); // read image
 
     if (grayImage.empty())
     {
         cout << "Could not read image" << endl;
     }
-
+    cout << "Image Read: " <<grayImage.rows<<" x "<<grayImage.cols<< endl;
     // Resize the image
     Size targetSize(50, 50);
     resize(grayImage, grayImage, targetSize);
 
-    // Perform face detection
+    cout << "Image Resized" << endl;
+//    // Perform face detection
     faces.clear();
     vector<vector<double>> incoming_data_vec; // the whole incoming data
-    faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
-
-    bool thereIsFace = false;
-    for (const auto &faceRect : faces)
-    {
-        thereIsFace = true;
-        Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
-
+//    faceCascade.detectMultiScale(grayImage, faces, 1.1, 3, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
+//
+//    bool thereIsFace = false;
+//    for (const auto &faceRect : faces)
+//    {
+//        thereIsFace = true;
+//        Mat faceImage = grayImage(faceRect); // Extract the region of interest (face) from the image
+//
         vector<double> flattenedImg = recognition().flatten(grayImage);
         incoming_data_vec.push_back(flattenedImg);
-    }
+//    }
 
-    if (!thereIsFace)
-    {
-        cout << "No faces in the incoming Photo\n";
-        return 0;
-    }
+//    if (!thereIsFace)
+//    {
+//        cout << "No faces in the incoming Photo\n";
+//        return 0;
+//    }
 
-    // Convert the input data to OpenCV format
+//    // Convert the input data to OpenCV format
     int numOfFaces = incoming_data_vec.size();
+    cout << "Num Faces" <<numOfFaces<< endl;
     num_features = incoming_data_vec[0].size();
-
+    cout << "Faces" << endl;
     Mat incomingData(numOfFaces, num_features, CV_32F);
-
+    cout << "incoming data" << endl;
     // filling trainig matrices
     for (int i = 0; i < numOfFaces; i++)
     {
@@ -167,11 +169,11 @@ int main(int argc, char *argv[])
             incomingData.at<float>(i, j) = static_cast<float>(incoming_data_vec[i][j]);
         }
     }
-
+    cout << "Facesssss" << endl;
     // Reduce the dimensionality of the data using PCA
     //    Mat reduced_incoming_data = pca.project(incomingData);
     Mat reduced_incoming_data = pca.reduceData(incomingData);
-
+    cout << "reduced" << endl;
     // Predict labels for the test data using the trained SVM classifier
     Mat predictions_for_incoming;
     svm->predict(reduced_incoming_data, predictions_for_incoming);
